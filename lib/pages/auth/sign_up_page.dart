@@ -28,7 +28,7 @@ class SignUpPage extends StatelessWidget {
             Center(
               child: Container(
                 width: 700,
-                child: PageTitle(title: 'SignIn'),
+                child: PageTitle(title: 'Create a new account'),
               ),
             ),
             BlocProvider<SignUpFormBloc>(

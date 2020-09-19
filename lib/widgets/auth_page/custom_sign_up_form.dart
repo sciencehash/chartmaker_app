@@ -19,6 +19,8 @@ final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 
 class _CustomSignUpFormState extends State<CustomSignUpForm> {
+  bool obscurePasswordText = true;
+
   bool get isPopulated =>
       _nameController.text.isNotEmpty &&
       _emailController.text.isNotEmpty &&
@@ -36,6 +38,9 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
             password: _passwordController.text.trim(),
           ),
         );
+    _nameController.text = "";
+    _emailController.text = "";
+    _passwordController.text = "";
   }
 
   @override
@@ -50,7 +55,10 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
       child: BlocBuilder<SignUpFormBloc, SignUpFormState>(
         builder: (context, state) {
           return Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: 0,
+            ),
             child: Form(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -91,12 +99,27 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock),
-                      suffixIcon: Icon(Icons.visibility_off),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: FloatingActionButton(
+                          child: Icon(obscurePasswordText
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          mini: true,
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          onPressed: () {
+                            setState(() {
+                              obscurePasswordText = !obscurePasswordText;
+                            });
+                          },
+                        ),
+                      ),
                       labelText: t('Password'),
                       border: OutlineInputBorder(),
                       errorMaxLines: 3,
                     ),
-                    obscureText: true,
+                    obscureText: obscurePasswordText,
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) {
@@ -113,7 +136,9 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                     children: [
                       // Log in button
                       SignUpButton(
-                        onPressed: (state.isFormValid && isPopulated && !state.isSubmitting)
+                        onPressed: (state.isFormValid &&
+                                isPopulated &&
+                                !state.isSubmitting)
                             ? _onFormSubmitted
                             : null,
                       ),
@@ -151,7 +176,9 @@ class SignUpButton extends StatelessWidget {
         height: 48,
         child: RaisedButton(
           padding: const EdgeInsets.all(0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
           child: Ink(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -162,7 +189,6 @@ class SignUpButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
             child: Container(
-              // constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
               padding: EdgeInsets.only(bottom: 5),
               alignment: Alignment.center,
               child: Text(

@@ -27,7 +27,10 @@ class AppScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: HeaderIsotype(),
+        leading: Container(
+          margin: const EdgeInsets.only(left: 15),
+          child: HeaderIsotype(),
+        ),
         title: Text(
           'Chart Maker',
           style: Theme.of(context).textTheme.headline6,
@@ -61,9 +64,10 @@ class AppScaffold extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(100),
                       onTap: () {
-                       if (ModalRoute.of(context).settings.name != ProfilePage.route) {
-                         Navigator.pushNamed(context, ProfilePage.route);
-                       }
+                        if (ModalRoute.of(context).settings.name !=
+                            ProfilePage.route) {
+                          Navigator.pushNamed(context, ProfilePage.route);
+                        }
                       },
                     ),
                   ),
@@ -195,8 +199,9 @@ class _MainMenuTile extends StatelessWidget {
     //
     final String currentRouteName = ModalRoute.of(context).settings.name;
     //
-    final bool isActiveItem = (routeName == '/' && currentRouteName == routeName) ||
-        (routeName != '/' && currentRouteName.startsWith(routeName));
+    final bool isActiveItem =
+        (routeName == '/' && currentRouteName == routeName) ||
+            (routeName != '/' && currentRouteName.startsWith(routeName));
 
     //
     return Material(
