@@ -19,7 +19,7 @@ class DrawerMenu extends StatelessWidget {
         _MainMenuTile(
           icon: Icons.library_books,
           label: 'My library',
-          routeName: '/', // TEMP //LibraryDocumentsPage.route,
+          routeName: '/', // TEMP //LibraryChartsPage.route,
           drawerMode: drawerMode,
         ),
         //

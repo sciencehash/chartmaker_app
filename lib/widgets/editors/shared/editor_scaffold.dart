@@ -7,6 +7,9 @@ import 'left_panels_tabs.dart';
 class EditorScaffold extends StatefulWidget {
   final List<Tab> leftTabBarChildren;
   final List<Widget> leftTabViewChildren;
+  final VoidCallback onSavePressed;
+  final String initialChartTitle;
+  final Function(String) onChartTitleChanged;
 
   const EditorScaffold({
     Key key,
@@ -14,6 +17,9 @@ class EditorScaffold extends StatefulWidget {
     Widget floatingActionButton,
     @required this.leftTabBarChildren,
     @required this.leftTabViewChildren,
+    @required this.initialChartTitle,
+    @required this.onChartTitleChanged,
+    this.onSavePressed,
   })  : _body = body,
         _floatingActionButton = floatingActionButton,
         super(key: key);
@@ -26,7 +32,13 @@ class EditorScaffold extends StatefulWidget {
 }
 
 class _EditorScaffoldState extends State<EditorScaffold> {
-  String _chartName = '';
+  String _chartTitle;
+
+  @override
+  void initState() {
+    _chartTitle = widget.initialChartTitle;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +61,15 @@ class _EditorScaffoldState extends State<EditorScaffold> {
             if (screenWidth > 600) SizedBox(width: 30),
             Expanded(
               child: TextFormField(
-                initialValue: _chartName,
+                initialValue: widget.initialChartTitle,
                 onChanged: (value) {
-                  setState(() => _chartName = value);
+                  // Callback
+                  widget.onChartTitleChanged(value);
+                  // Update prefixIcon
+                  setState(() => _chartTitle = value);
                 },
                 decoration: InputDecoration(
-                  prefixIcon: Icon(_chartName.isNotEmpty
+                  prefixIcon: Icon(_chartTitle.isNotEmpty
                       ? Icons.label
                       : Icons.label_outline),
                   labelText: 'Chart name',
@@ -76,7 +91,7 @@ class _EditorScaffoldState extends State<EditorScaffold> {
                   padding: const EdgeInsets.all(5),
                   child: OutlineButton(
                     child: Text('Save'),
-                    onPressed: () {},
+                    onPressed: widget.onSavePressed,
                   ),
                 ),
               ],
@@ -91,6 +106,7 @@ class _EditorScaffoldState extends State<EditorScaffold> {
                     children: [
                       DrawerHeader(
                         child: Text('a'),
+
                       ),
                       DrawerMenu(),
                     ],

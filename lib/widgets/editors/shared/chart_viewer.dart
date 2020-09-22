@@ -11,9 +11,14 @@ import 'package:flutter/material.dart';
 import '../../../utils/utils.dart';
 
 class ChartViewer extends StatefulWidget {
+  final String lib;
   final Map config;
 
-  ChartViewer({Key key, @required this.config}) : super(key: key);
+  ChartViewer({
+    Key key,
+    @required this.lib,
+    @required this.config,
+  }) : super(key: key);
 
   @override
   _ChartViewerState createState() => _ChartViewerState();
@@ -33,12 +38,15 @@ class _ChartViewerState extends State<ChartViewer> {
     final rand = math.Random();
     randomViewId = 'iframeElement' + rand.nextInt(100000).toString();
 
+    final srcdoc = widget.lib == 'chartjs'
+        ? '''<canvas id="chart"></canvas><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script><script src="chartmaker.min.js"></script>'''
+        : '''<div id="chart"></div><script src="https://cdn.jsdelivr.net/npm/apexcharts"></script><script src="chartmaker.min.js"></script>''';
+
     ui.platformViewRegistry.registerViewFactory(
       randomViewId,
       (int randomViewId) {
         _iframeElement.style.border = 'none';
-        _iframeElement.srcdoc =
-            '''<canvas id="chart"></canvas><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script><script defer src="viewer.js"></script>''';
+        _iframeElement.srcdoc = srcdoc;
         return _iframeElement;
       },
     );
@@ -56,7 +64,10 @@ class _ChartViewerState extends State<ChartViewer> {
         if (_iframeElement.contentWindow != null) {
           // Send initial data, iframe ID and chart configuration
           _iframeElement.contentWindow.postMessage(
-            'viewerIframeID ${Utils.chartConfigToBase64(widget.config)}',
+            'viewerIframeID ${Utils.chartConfigToBase64({
+              'lib': widget.lib,
+              'config': widget.config,
+            })}',
             '*',
           );
         }
@@ -67,7 +78,10 @@ class _ChartViewerState extends State<ChartViewer> {
       if (_iframeElement.contentWindow != null) {
         // Send initial data, iframe ID and chart configuration
         _iframeElement.contentWindow.postMessage(
-          'viewerIframeID ${Utils.chartConfigToBase64(widget.config)}',
+          'viewerIframeID ${Utils.chartConfigToBase64({
+            'lib': widget.lib,
+            'config': widget.config,
+          })}',
           '*',
         );
       }
@@ -80,7 +94,10 @@ class _ChartViewerState extends State<ChartViewer> {
   void didUpdateWidget(ChartViewer oldWidget) {
     //
     _iframeElement.contentWindow.postMessage(
-      'viewerIframeID ${Utils.chartConfigToBase64(widget.config)}',
+      'viewerIframeID ${Utils.chartConfigToBase64({
+        'lib': widget.lib,
+        'config': widget.config,
+      })}',
       '*',
     );
     super.didUpdateWidget(oldWidget);

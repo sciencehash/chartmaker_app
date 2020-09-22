@@ -11,54 +11,54 @@ import 'package:equatable/equatable.dart';
 
 import '../../models/app_user.dart';
 
-import '../../models/app_document.dart';
-import '../../repositories/app_document_repository.dart';
+import '../../models/app_chart.dart';
+import '../../repositories/app_chart_repository.dart';
 
-part 'app_document_state.dart';
+part 'app_chart_state.dart';
 
-class AppDocumentCubit extends Cubit<AppDocumentState> {
-  final AppDocumentRepository _appDocumentRepository;
-  StreamSubscription _appDocumentsSubscription;
-  StreamSubscription _appDocumentSubscription;
+class AppChartCubit extends Cubit<AppChartState> {
+  final AppChartRepository _appChartRepository;
+  StreamSubscription _appChartsSubscription;
+  StreamSubscription _appChartSubscription;
 
-  AppDocumentCubit({
-    @required AppDocumentRepository appDocumentRepository,
-  })  : _appDocumentRepository = appDocumentRepository,
-        super(AppDocumentInitial());
+  AppChartCubit({
+    @required AppChartRepository appChartRepository,
+  })  : _appChartRepository = appChartRepository,
+        super(AppChartInitial());
 
-  void loadAppDocuments({
+  void loadAppCharts({
     String userId,
     String libraryId,
   }) async {
-    _appDocumentsSubscription?.cancel();
-    _appDocumentsSubscription = _appDocumentRepository
-        .documents(
+    _appChartsSubscription?.cancel();
+    _appChartsSubscription = _appChartRepository
+        .charts(
       userId: userId,
       libraryId: libraryId,
     )
         .listen(
-      (appDocuments) async {
-        emit(AppDocumentsLoaded(
+      (appCharts) async {
+        emit(AppChartsLoaded(
           libraryId: libraryId,
-          appDocuments: appDocuments,
+          appCharts: appCharts,
         ));
       },
     );
   }
 
-  void loadAppDocument({
+  void loadAppChart({
     @required AppUser user,
-    @required String documentId,
+    @required String chartId,
     bool withFileData = true,
   }) async {
-    _appDocumentSubscription?.cancel();
-    _appDocumentSubscription = _appDocumentRepository
-        .document(
+    _appChartSubscription?.cancel();
+    _appChartSubscription = _appChartRepository
+        .chart(
       userId: user.id,
-      documentId: documentId,
+      chartId: chartId,
     )
         .listen(
-      (appDocument) async {
+      (appChart) async {
 
         // Default values, null for no changes
         int localPageNum;
@@ -67,16 +67,16 @@ class AppDocumentCubit extends Cubit<AppDocumentState> {
         // If local value is more recent of remote db values
         // if (isLocalDataMoreRecent) {
         //   // Get pageNum saved locally (null for no changes)
-        //   localPageNum = await LocalStorageRepository.getDocumentPageNumber(
+        //   localPageNum = await LocalStorageRepository.getChartPageNumber(
         //         localStorageDb: localStorageDb,
-        //         documentId: appDocument.id,
+        //         chartId: appChart.id,
         //       ) ??
         //       null;
         //
         //   // Get scale saved locally (null for no changes)
-        //   localScale = await LocalStorageRepository.getDocumentScale(
+        //   localScale = await LocalStorageRepository.getChartScale(
         //         localStorageDb: localStorageDb,
-        //         documentId: appDocument.id,
+        //         chartId: appChart.id,
         //       ) ??
         //       null;
         // } else {
@@ -85,8 +85,8 @@ class AppDocumentCubit extends Cubit<AppDocumentState> {
         // }
 
         // emit(
-        //   AppDocumentLoaded(
-        //     appDocument.copyWith(
+        //   AppChartLoaded(
+        //     appChart.copyWith(
         //       coverThumbnail: thumbnailData,
         //       fileData: fileData,
         //       pageNum: localPageNum,
@@ -99,41 +99,41 @@ class AppDocumentCubit extends Cubit<AppDocumentState> {
     );
   }
 
-  void addAppDocument(AppDocument appDocument) async {
-    _appDocumentRepository.addNew(appDocument);
+  void addAppChart(AppChart appChart) async {
+    _appChartRepository.addNew(appChart);
   }
 
-  void updateAppDocument({
-    @required AppDocument appDocument,
+  void updateAppChart({
+    @required AppChart appChart,
     // @required Database localStorageDb,
   }) async {
     // Get utcLastUpdate saved locally
     // final DateTime localUtcLastUpdate =
-    //     await LocalStorageRepository.getDocumentUtcLastUpdate(
+    //     await LocalStorageRepository.getChartUtcLastUpdate(
     //           localStorageDb: localStorageDb,
-    //           documentId: appDocument.id,
+    //           chartId: appChart.id,
     //         ) ??
     //         null;
     //
     // // Get pageNum saved locally
-    // final localPageNum = await LocalStorageRepository.getDocumentPageNumber(
+    // final localPageNum = await LocalStorageRepository.getChartPageNumber(
     //       localStorageDb: localStorageDb,
-    //       documentId: appDocument.id,
+    //       chartId: appChart.id,
     //     ) ??
     //     null;
     //
     // // Get scale saved locally
-    // final localScale = await LocalStorageRepository.getDocumentScale(
+    // final localScale = await LocalStorageRepository.getChartScale(
     //       localStorageDb: localStorageDb,
-    //       documentId: appDocument.id,
+    //       chartId: appChart.id,
     //     ) ??
     //     null;
     //
     // // If local value is more recent of remote db values
     // if (localUtcLastUpdate != null &&
-    //     localUtcLastUpdate.isAfter(appDocument.utcLastUpdate)) {
-    //   // Use local values in AppDocument
-    //   appDocument = appDocument.copyWith(
+    //     localUtcLastUpdate.isAfter(appChart.utcLastUpdate)) {
+    //   // Use local values in AppChart
+    //   appChart = appChart.copyWith(
     //     pageNum: localPageNum,
     //     scale: localScale,
     //     utcLastUpdate: localUtcLastUpdate,
@@ -141,17 +141,17 @@ class AppDocumentCubit extends Cubit<AppDocumentState> {
     // }
     //
     // //
-    // _appDocumentRepository.update(appDocument);
+    // _appChartRepository.update(appChart);
   }
 
-  void deleteAppDocument(AppDocument appDocument) async {
-    _appDocumentRepository.delete(appDocument);
+  void deleteAppChart(AppChart appChart) async {
+    _appChartRepository.delete(appChart);
   }
 
   @override
   Future<void> close() {
-    _appDocumentsSubscription?.cancel();
-    _appDocumentSubscription?.cancel();
+    _appChartsSubscription?.cancel();
+    _appChartSubscription?.cancel();
     return super.close();
   }
 }

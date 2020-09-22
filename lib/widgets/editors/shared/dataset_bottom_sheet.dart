@@ -17,7 +17,7 @@ class DatasetBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Map chartJsConfig =
-        (context.bloc<EditorCubit>().state as EditorLoaded).chartConfig;
+        (context.bloc<EditorCubit>().state as EditorLoaded).appChart.config;
 
     _c.text = json.encode(chartJsConfig['data']['datasets'][0]['data']);
 
@@ -37,9 +37,9 @@ class DatasetBottomSheet extends StatelessWidget {
             chartJsConfig['data']['datasets'][0]['data'] = json.decode(_c.text);
 
             //
-            context.bloc<EditorCubit>().updateChart(
-                  chartConfig: chartJsConfig,
-                );
+            // context.bloc<EditorCubit>().updateChart(
+            //       chartConfig: chartJsConfig,
+            //     );
             Scaffold.of(context).showBottomSheet((context) => Text('Algo'));
           },
           child: Text('AAA'),

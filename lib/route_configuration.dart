@@ -11,9 +11,9 @@ import 'pages/root_page.dart';
 
 import 'cubits/editor/editor_cubit.dart';
 import 'repositories/chart_template_repository.dart';
-import 'cubits/app_document/app_document_cubit.dart';
-import 'repositories/app_document_repository_firebase.dart';
-import 'pages/libraries/documents_page.dart';
+import 'cubits/app_chart/app_chart_cubit.dart';
+import 'repositories/app_chart_repository_firebase.dart';
+import 'pages/charts_page.dart';
 
 import 'pages/editor.dart';
 
@@ -92,16 +92,16 @@ class RouteConfiguration {
     ),
     //
     // --------------------------------------------
-    // --- Libraries 'Library documents' routes ---
+    // --- Libraries 'Library charts' routes ---
     // --------------------------------------------
     //
     Path(
-      r'^' + LibraryDocumentsPage.baseRoute + r'/([\w-]+)$',
-      (context, match) => BlocProvider<AppDocumentCubit>(
-        create: (BuildContext context) => AppDocumentCubit(
-          appDocumentRepository: AppDocumentRepositoryFirebase(),
+      r'^' + LibraryChartsPage.baseRoute + r'/([\w-]+)$',
+      (context, match) => BlocProvider<AppChartCubit>(
+        create: (BuildContext context) => AppChartCubit(
+          appChartRepository: AppChartRepositoryFirebase(),
         ),
-        child: LibraryDocumentsPage(libraryId: match),
+        child: LibraryChartsPage(libraryId: match),
       ),
     ),
     //
@@ -113,36 +113,50 @@ class RouteConfiguration {
       r'^' + ChartEditor.baseRoute + r'/([\w-]+)$',
       (context, match) => MultiBlocProvider(
         providers: [
-          BlocProvider<AppDocumentCubit>(
-            create: (BuildContext context) => AppDocumentCubit(
-              appDocumentRepository: AppDocumentRepositoryFirebase(),
+          BlocProvider<AppChartCubit>(
+            create: (BuildContext context) => AppChartCubit(
+              appChartRepository: AppChartRepositoryFirebase(),
+            ),
+          ),
+          BlocProvider<EditorCubit>(
+            create: (BuildContext context) => EditorCubit(),
+          ),
+        ],
+        child: ChartEditor(chartId: match),
+      ),
+    ),
+    Path(
+      r'^' + ChartEditor.baseRoute + r'/template/([\w-]+)$',
+          (context, match) => MultiBlocProvider(
+        providers: [
+          BlocProvider<AppChartCubit>(
+            create: (BuildContext context) => AppChartCubit(
+              appChartRepository: AppChartRepositoryFirebase(),
             ),
           ),
           BlocProvider<EditorCubit>(
             create: (BuildContext context) => EditorCubit(
-              chartTemplateRepository: ChartTemplateRepository(),
+                templateId: match,
             ),
           ),
         ],
-        child: ChartEditor(documentId: match),
+        child: ChartEditor(),
       ),
     ),
     Path(
       r'^' + ChartEditor.baseRoute,
       (context, match) => MultiBlocProvider(
         providers: [
-          BlocProvider<AppDocumentCubit>(
-            create: (BuildContext context) => AppDocumentCubit(
-              appDocumentRepository: AppDocumentRepositoryFirebase(),
+          BlocProvider<AppChartCubit>(
+            create: (BuildContext context) => AppChartCubit(
+              appChartRepository: AppChartRepositoryFirebase(),
             ),
           ),
           BlocProvider<EditorCubit>(
-            create: (BuildContext context) => EditorCubit(
-              chartTemplateRepository: ChartTemplateRepository(),
-            ),
+            create: (BuildContext context) => EditorCubit(),
           ),
         ],
-        child: ChartEditor(documentId: null),
+        child: ChartEditor(chartId: null),
       ),
     ),
     //
@@ -152,7 +166,7 @@ class RouteConfiguration {
     //
     Path(
       r'^' + RootPage.route,
-      (context, match) => RootPage(),
+      (context, match) => const RootPage(),
     ),
     //
     // --------------------------------------------------
@@ -161,7 +175,7 @@ class RouteConfiguration {
     //
     Path(
       r'^',
-      (context, match) => RootPage(),
+      (context, match) => const RootPage(),
     ),
   ];
 

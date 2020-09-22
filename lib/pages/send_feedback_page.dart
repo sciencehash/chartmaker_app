@@ -18,7 +18,13 @@ class SendFeedbackPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PageTitle(title: 'Send feedback'),
-          ],
+            SizedBox(height: 20),
+            Center(
+              child: Text(
+                'Nothing here yet.',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+            ),          ],
         ),
       ),
     );

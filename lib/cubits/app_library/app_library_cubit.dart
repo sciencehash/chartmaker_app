@@ -12,6 +12,9 @@ part 'app_library_state.dart';
 class AppLibraryCubit extends Cubit<AppLibraryState> {
   final AppLibraryRepository _appLibraryRepository;
   StreamSubscription _appLibrariesSubscription;
+  bool defaultLibraryChecked = false;
+
+  String currentLibraryId;
 
   AppLibraryCubit({
     @required AppLibraryRepository appLibraryRepository,
@@ -21,7 +24,15 @@ class AppLibraryCubit extends Cubit<AppLibraryState> {
   void loadAppLibraries({String userId}) async {
     _appLibrariesSubscription?.cancel();
     _appLibrariesSubscription = _appLibraryRepository.libraries(userId: userId).listen(
-          (appLibraries) => emit(AppLibrariesLoaded(appLibraries)),
+          (appLibraries) async {
+            if (!defaultLibraryChecked && appLibraries.isEmpty){
+              defaultLibraryChecked = true;
+              await _appLibraryRepository.addNew(
+                  AppLibrary.defaultLibrary(userId),
+              );
+            }
+            emit(AppLibrariesLoaded(appLibraries));
+          },
     );
   }
 

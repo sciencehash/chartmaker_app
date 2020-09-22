@@ -48,5 +48,8 @@ class DarkTheme {
     popupMenuTheme: PopupMenuThemeData(
       color: Color(0xff2C333D),
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: Color(0xff272b34),
+    ),
   );
 }

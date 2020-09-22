@@ -10,10 +10,10 @@ class EditorInitial extends EditorState {
 }
 
 class EditorLoaded extends EditorState {
-  final Map chartConfig;
+  final AppChart appChart;
 
   const EditorLoaded({
-    @required this.chartConfig,
+    @required this.appChart,
   });
 
   // @override

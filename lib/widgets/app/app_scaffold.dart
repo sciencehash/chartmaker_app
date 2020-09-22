@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auth/auth.dart';
+import 'package:chartmaker_app/widgets/app/person_circle_icon.dart';
 
 import 'header_isotype.dart';
-import '../../pages/libraries/documents_page.dart';
+import '../../pages/charts_page.dart';
 import '../../pages/help_page.dart';
 import '../../pages/profile_page.dart';
 import '../../pages/send_feedback_page.dart';
@@ -82,9 +85,43 @@ class AppScaffold extends StatelessWidget {
                 child: Scrollbar(
                   child: ListView(
                     children: [
-                      DrawerHeader(
-                        child: Text('a'),
+                      // DrawerHeader(
+                      //   child: Text('a'),
+                      // ),
+                      // Drawer Header
+                      Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 3),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: PersonCircleIcon(),
+                            ),
+                            SizedBox(width: 7),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20),
+                                  OutlineButton(
+                                    child: Text('View profile'),
+                                    // textColor: Theme.of(context).primaryColor,
+                                    onPressed: () {
+                                      if (ModalRoute.of(context).settings.name !=
+                                          ProfilePage.route) {
+                                        Navigator.pushNamed(context, ProfilePage.route);
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(height: 15),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                      // Drawer Menu
                       _MainMenu(drawerMode: true),
                     ],
                   ),
@@ -144,7 +181,7 @@ class _MainMenu extends StatelessWidget {
         _MainMenuTile(
           icon: Icons.library_books,
           label: 'My library',
-          routeName: '/', // TEMP //LibraryDocumentsPage.route,
+          routeName: '/', // TEMP //LibraryChartsPage.route,
           drawerMode: drawerMode,
         ),
         //

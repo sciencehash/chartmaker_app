@@ -9,7 +9,7 @@ import '../widgets/app/app_scaffold.dart';
 import '../widgets/app/bloc_loading_progress_indicator.dart';
 
 import 'redirection_page.dart';
-import 'libraries/documents_page.dart';
+import 'charts_page.dart';
 
 class RootPage extends StatelessWidget {
   static const String route = '/';
@@ -28,20 +28,17 @@ class RootPage extends StatelessWidget {
         child: BlocBuilder<AppLibraryCubit, AppLibraryState>(
           builder: (context, state) {
             if (state is AppLibrariesLoaded) {
-              //
-              if (state.appLibraries.length == 0) {
-                // Add the first default library
-                context.bloc<AppLibraryCubit>().addAppLibrary(
-                      AppLibrary.defaultLibrary(uid),
-                    );
-              } else {
+              if (state.appLibraries.isNotEmpty) {
                 // Redirect to the first library
                 return RedirectionPage(
-                  routeName: LibraryDocumentsPage.baseRoute +
+                  routeName: LibraryChartsPage.baseRoute +
                       '/' +
                       state.appLibraries.first.id,
                   clearHistory: true,
                 );
+              } else {
+                //
+                return BlocLoadingProgressIndicator();
               }
             } else {
               // Load user libraries
