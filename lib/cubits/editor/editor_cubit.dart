@@ -2,6 +2,9 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 // import 'package:equatable/equatable.dart';
 
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html';
+
 import '../../repositories/chart_template_repository.dart';
 
 import '../../models/app_chart.dart';
@@ -10,6 +13,8 @@ part 'editor_state.dart';
 
 class EditorCubit extends Cubit<EditorState> {
   final String templateId;
+  Window _window;
+  IFrameElement _iframeElement;
 
   EditorCubit({this.templateId}) : super(EditorInitial());
 
@@ -45,5 +50,42 @@ class EditorCubit extends Cubit<EditorState> {
     emit(EditorLoaded(
       appChart: appChart,
     ));
+  }
+
+  void setCurrentWindowAndIFrame(Window win, IFrameElement iframe) {
+    _window = win;
+    _iframeElement = iframe;
+  }
+
+  void downloadAsPNG() {
+    if (_window != null && _iframeElement != null) {
+      //
+      onMessage(event) {
+        //
+        String data = (event as MessageEvent).data;
+        //
+        if (data.startsWith('base64ImageURI')) {
+          // Remove listener
+          _window.removeEventListener('message', onMessage);
+          //
+          data = data.substring(14);
+          //
+          AnchorElement anchorElement = AnchorElement(
+            href: data,
+          );
+          anchorElement.download = 'chartimage.png';
+          anchorElement.click();
+        }
+      }
+
+      // Add listener
+      _window.addEventListener('message', onMessage);
+
+      //
+      _iframeElement.contentWindow.postMessage(
+        'getBase64ImageURI',
+        '*',
+      );
+    }
   }
 }

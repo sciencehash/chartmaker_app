@@ -17,28 +17,30 @@ class TemplatesBottomSheet extends StatelessWidget {
 
     return ChartsBottomSheetScaffold(
       appBarTitle: 'Select a template',
-      body: Wrap(
-        spacing: 20,
-        runSpacing: 20,
-        children: [
-          for (Map template in templates)
-            FlatButton(
-              child: Text(
-                template['title'],
-                style: TextStyle(color: Colors.black87),
+      body: SingleChildScrollView(
+        child: Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          children: [
+            for (Map template in templates)
+              FlatButton(
+                child: Text(
+                  template['title'],
+                  style: TextStyle(color: Colors.black87),
+                ),
+                padding: const EdgeInsets.all(50),
+                color: Colors.white,
+                minWidth: 200,
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                    context,
+                    ChartEditor.baseRoute + '/template/' + template['id'],
+                  );
+                },
               ),
-              padding: const EdgeInsets.all(50),
-              color: Colors.white,
-              minWidth: 200,
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  ChartEditor.baseRoute + '/template/' + template['id'],
-                );
-              },
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

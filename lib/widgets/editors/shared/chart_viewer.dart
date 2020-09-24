@@ -4,9 +4,12 @@ import 'dart:math' as math;
 import 'dart:html';
 
 // import 'dart:ui' as ui;
+import 'package:chartmaker_app/cubits/editor/editor_cubit.dart';
+
 import 'UiFake.dart' if (dart.library.html) 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/utils.dart';
 
@@ -33,6 +36,47 @@ class _ChartViewerState extends State<ChartViewer> {
 
   bool chartInitiated = false;
 
+  onMessageListener(event) {
+    final data = (event as MessageEvent).data;
+    // if data is: frameId newHeight
+    if (data != 'rid' && !data.startsWith('base64ImageURI')) {
+      // Update iframe height
+      final frData = (event as MessageEvent).data.split(' ');
+      if (this.mounted) {
+        setState(() {
+          iframeHeight = double.tryParse(frData[1]);
+        });
+      }
+    }
+    // rid: Request initial data, to send iframe ID and chart configuration
+    if (data == 'rid') {
+      // print((event as MessageEvent).data);
+      if (_iframeElement.contentWindow != null) {
+        // Send initial data, iframe ID and chart configuration
+        _iframeElement.contentWindow.postMessage(
+          'viewerIframeID ${Utils.chartConfigToBase64({
+            'lib': widget.lib,
+            'config': widget.config,
+          })}',
+          '*',
+        );
+      }
+    }
+  }
+
+  onResizeListener(event) {
+    if (_iframeElement.contentWindow != null) {
+      // Send initial data, iframe ID and chart configuration
+      _iframeElement.contentWindow.postMessage(
+        'viewerIframeID ${Utils.chartConfigToBase64({
+          'lib': widget.lib,
+          'config': widget.config,
+        })}',
+        '*',
+      );
+    }
+  }
+
   @override
   void initState() {
     final rand = math.Random();
@@ -51,41 +95,16 @@ class _ChartViewerState extends State<ChartViewer> {
       },
     );
 
-    window.addEventListener('message', (event) {
-      if ((event as MessageEvent).data != "rid") {
-        // Update iframe height
-        final frData = (event as MessageEvent).data.split(' ');
-        setState(() {
-          iframeHeight = double.tryParse(frData[1]);
-        });
-      }
-      if ((event as MessageEvent).data == "rid") {
-        // print((event as MessageEvent).data);
-        if (_iframeElement.contentWindow != null) {
-          // Send initial data, iframe ID and chart configuration
-          _iframeElement.contentWindow.postMessage(
-            'viewerIframeID ${Utils.chartConfigToBase64({
-              'lib': widget.lib,
-              'config': widget.config,
-            })}',
-            '*',
-          );
-        }
-      }
-    });
+    // Add listener
+    window.addEventListener('message', onMessageListener);
+    // Add listener
+    window.addEventListener('resize', onResizeListener);
 
-    window.addEventListener('resize', (event) {
-      if (_iframeElement.contentWindow != null) {
-        // Send initial data, iframe ID and chart configuration
-        _iframeElement.contentWindow.postMessage(
-          'viewerIframeID ${Utils.chartConfigToBase64({
-            'lib': widget.lib,
-            'config': widget.config,
-          })}',
-          '*',
+    //
+    context.bloc<EditorCubit>().setCurrentWindowAndIFrame(
+          window,
+          _iframeElement,
         );
-      }
-    });
 
     super.initState();
   }
@@ -101,6 +120,16 @@ class _ChartViewerState extends State<ChartViewer> {
       '*',
     );
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    // Remove listener
+    window.removeEventListener('message', onMessageListener);
+    // Remove listener
+    window.removeEventListener('resize', onResizeListener);
+
+    super.dispose();
   }
 
   @override
