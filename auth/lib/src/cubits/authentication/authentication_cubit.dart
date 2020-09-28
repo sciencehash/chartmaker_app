@@ -14,12 +14,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   final AuthRepository _authRepository;
 
-  void loadAppAuth() async {
-    bool firstTime = false;
+  void loadAppAuth({flutterHotReload = false}) async {
+    bool isFirstLoad = true;
     try {
       FirebaseAuth.instance.authStateChanges().listen((User user) {
-        if (!firstTime) {
-          firstTime = true;
+        if (isFirstLoad && !flutterHotReload) {
+          isFirstLoad = false;
         } else if (user != null) {
           final name = _authRepository.getUser();
           emit(
@@ -31,7 +31,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           );
         }
       });
-    } catch (_) {
+    } catch (e) {
+      print(e);
       emit(
         Unauthenticated(authRepository: _authRepository),
       );

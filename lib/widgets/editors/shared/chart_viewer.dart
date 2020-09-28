@@ -112,13 +112,15 @@ class _ChartViewerState extends State<ChartViewer> {
   @override
   void didUpdateWidget(ChartViewer oldWidget) {
     //
-    _iframeElement.contentWindow.postMessage(
-      'viewerIframeID ${Utils.chartConfigToBase64({
-        'lib': widget.lib,
-        'config': widget.config,
-      })}',
-      '*',
-    );
+    if (_iframeElement.contentWindow != null) {
+      _iframeElement.contentWindow.postMessage(
+        'viewerIframeID ${Utils.chartConfigToBase64({
+          'lib': widget.lib,
+          'config': widget.config,
+        })}',
+        '*',
+      );
+    }
     super.didUpdateWidget(oldWidget);
   }
 

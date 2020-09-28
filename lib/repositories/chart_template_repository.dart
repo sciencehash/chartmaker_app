@@ -2102,59 +2102,14 @@ class ChartTemplateRepository {
       },
     },
     // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
-    // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
-    // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
-    // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
-    // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
-    // Template
-    {
-      'id': 'apexcharts-aa-bar',
-      'lib': 'apexcharts',
-      'title': 'AA Bar Chart',
-      'config': {
-        // 'series':
-      },
-    },
+    // {
+    //   'id': 'apexcharts-aa-bar',
+    //   'lib': 'apexcharts',
+    //   'title': 'AA Bar Chart',
+    //   'config': {
+    //     // 'series':
+    //   },
+    // },
   ];
 
   static Map getTemplateById(String templateId) {

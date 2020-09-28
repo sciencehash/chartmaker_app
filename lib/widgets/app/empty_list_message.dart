@@ -33,8 +33,9 @@ class EmptyListMessage extends StatelessWidget {
               ),
             ),
             if (onButtonPressed != null)
-              OutlineButton(
+              FlatButton(
                 child: Text(buttonLabel ?? 'Go!'),
+                color: Theme.of(context).primaryColor,
                 onPressed: onButtonPressed,
               )
           ],

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -67,8 +68,24 @@ class AppChart extends Equatable {
     );
   }
 
+  List<Map> getClonedDatasets() {
+    //
+    if (config['lib'] == 'chartjs') {
+      return List.castFrom<dynamic, Map>(
+        jsonDecode(jsonEncode(config['config']['data']['datasets'])),
+      );
+    } else if (config['lib'] == 'apexcharts') {
+      return List.castFrom<dynamic, Map>(
+        jsonDecode(jsonEncode(config['config']['series'])),
+      );
+    } else {
+      return [];
+    }
+  }
+
   factory AppChart.fromJson(Map<String, dynamic> json) =>
       _$AppChartFromJson(json);
+
   Map<String, dynamic> toJson() => _$AppChartToJson(this);
 
   AppChart.fromSnapshot(DocumentSnapshot snapshot)

@@ -16,9 +16,7 @@ class AppChartRepositoryFirebase extends AppChartRepository {
 
   //
   Future<void> update(AppChart appChart) async {
-    appChartsCollection
-        .doc(appChart.id)
-        .update(appChart.toDocument());
+    appChartsCollection.doc(appChart.id).update(appChart.toDocument());
   }
 
   //
@@ -52,5 +50,15 @@ class AppChartRepositoryFirebase extends AppChartRepository {
     return appChartsCollection.doc(chartId).snapshots().map(
           (snapshot) => AppChart.fromSnapshot(snapshot),
         );
+  }
+
+  //
+  Future<AppChart> onceChart({
+    @required String userId,
+    @required String chartId,
+  }) async {
+    return AppChart.fromSnapshot(
+      await appChartsCollection.doc(chartId).get(),
+    );
   }
 }

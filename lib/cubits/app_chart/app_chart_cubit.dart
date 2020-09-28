@@ -140,8 +140,8 @@ class AppChartCubit extends Cubit<AppChartState> {
     //   );
     // }
     //
-    // //
-    // _appChartRepository.update(appChart);
+    //
+    _appChartRepository.update(appChart);
   }
 
   void deleteAppChart(AppChart appChart) async {

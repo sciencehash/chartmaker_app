@@ -38,7 +38,6 @@ class EnginesBottomSheet extends StatelessWidget {
                 color: Color(0xfffe777b),
                 minWidth: 200,
                 onPressed: () {
-                  Navigator.pop(context);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -54,7 +53,6 @@ class EnginesBottomSheet extends StatelessWidget {
                 color: Color(0xff2c97f3),
                 minWidth: 200,
                 onPressed: () {
-                  Navigator.pop(context);
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,

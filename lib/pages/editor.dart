@@ -22,14 +22,9 @@ class ChartEditor extends StatefulWidget {
 }
 
 class _ChartEditorState extends State<ChartEditor> {
-  bool _isNewChart;
 
   @override
   void initState() {
-    _isNewChart = widget.chartId == null;
-
-    if (_isNewChart) {
-    } else {}
 
     super.initState();
   }
@@ -87,19 +82,33 @@ class _ChartEditorState extends State<ChartEditor> {
                   );
             },
             onSavePressed: () {
-              context.bloc<AppChartCubit>().addAppChart(
-                editorState.appChart,
-              );
+              if (widget.chartId == null) {
+                context.bloc<AppChartCubit>().addAppChart(
+                      editorState.appChart,
+                    );
+              } else {
+                context.bloc<AppChartCubit>().updateAppChart(
+                      appChart: editorState.appChart,
+                    );
+              }
               //
               Navigator.pop(context);
             },
           );
         } else {
-          //
-          context.bloc<EditorCubit>().loadEditorFromChartTemplate(
-                userId: uid,
-                libraryId: context.bloc<AppLibraryCubit>().currentLibraryId,
-              );
+          if (widget.chartId == null) {
+            //
+            context.bloc<EditorCubit>().loadEditorFromChartTemplate(
+                  userId: uid,
+                  libraryId: context.bloc<AppLibraryCubit>().currentLibraryId,
+                );
+          } else {
+            //
+            context.bloc<EditorCubit>().loadEditorFromAppChart(
+                  userId: uid,
+                  appChartId: widget.chartId,
+                );
+          }
           //
           return Scaffold(
             body: BlocLoadingProgressIndicator(),

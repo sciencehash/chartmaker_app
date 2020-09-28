@@ -92,9 +92,21 @@ class _VerticalTabsState extends State<VerticalTabs>
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      pageController.jumpToPage(widget.initialIndex);
+      if (widget.initialIndex > widget.contents.length){
+        pageController.jumpToPage(widget.initialIndex);
+      }
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    //
+    animationControllers.forEach(
+      (controller) => controller.dispose(),
+    );
+
+    super.dispose();
   }
 
   @override

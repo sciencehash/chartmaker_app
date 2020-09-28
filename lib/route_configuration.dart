@@ -1,4 +1,5 @@
 import 'package:chartmaker_app/cubits/app_library/app_library_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
@@ -119,7 +120,9 @@ class RouteConfiguration {
             ),
           ),
           BlocProvider<EditorCubit>(
-            create: (BuildContext context) => EditorCubit(),
+            create: (BuildContext context) => EditorCubit(
+              appChartRepository: AppChartRepositoryFirebase(),
+            ),
           ),
         ],
         child: ChartEditor(chartId: match),
@@ -127,7 +130,7 @@ class RouteConfiguration {
     ),
     Path(
       r'^' + ChartEditor.baseRoute + r'/template/([\w-]+)$',
-          (context, match) => MultiBlocProvider(
+      (context, match) => MultiBlocProvider(
         providers: [
           BlocProvider<AppChartCubit>(
             create: (BuildContext context) => AppChartCubit(
@@ -136,7 +139,7 @@ class RouteConfiguration {
           ),
           BlocProvider<EditorCubit>(
             create: (BuildContext context) => EditorCubit(
-                templateId: match,
+              templateId: match,
             ),
           ),
         ],
@@ -194,47 +197,13 @@ class RouteConfiguration {
           builder: (context) {
             return BlocBuilder<AuthenticationCubit, AuthenticationState>(
               builder: (context, state) {
-                //
-                final List<String> unauthenticatedRoutes = [
-                  SignInPage.route,
-                  SignUpPage.route
-                ];
-
-                //
-                if (settings.name == '/signout') {
-                  // Close AppLibrary subscription
-                  context.bloc<AppLibraryCubit>().close();
-                  // Sign out
-                  context.bloc<AuthenticationCubit>().signOut();
-                  // Redirect to Sign in page
-                  return RedirectionPage(
-                    routeName: SignInPage.route,
-                    clearHistory: true,
-                  );
-                } else if (state is Unauthenticated &&
-                    !unauthenticatedRoutes.contains(settings.name)) {
-                  // Redirect to Sign in page
-                  return RedirectionPage(
-                    routeName: SignInPage.route,
-                    clearHistory: true,
-                  );
-                } else if (state is Unauthenticated &&
-                    unauthenticatedRoutes.contains(settings.name)) {
-                  // Auth pages
-                  return path.builder(context, match);
-                } else if (state is Authenticated &&
-                    unauthenticatedRoutes.contains(settings.name)) {
-                  // Redirect to root page
-                  return RedirectionPage(
-                    routeName: RootPage.route,
-                    clearHistory: true,
-                  );
-                } else if (state is Authenticated &&
-                    state.user != null &&
-                    !unauthenticatedRoutes.contains(settings.name)) {
-                  // Authenticated pages
-                  return path.builder(context, match);
-                } else {
+                if (state is AuthenticationInitial) {
+                  // LoadAppAuth only for Flutter Hot reload
+                  if (kDebugMode) {
+                    context
+                        .bloc<AuthenticationCubit>()
+                        .loadAppAuth(flutterHotReload: true);
+                  }
                   // Processing page
                   return Scaffold(
                     body: Center(
@@ -245,6 +214,59 @@ class RouteConfiguration {
                       ),
                     ),
                   );
+                } else {
+                  //
+                  final List<String> unauthenticatedRoutes = [
+                    SignInPage.route,
+                    SignUpPage.route
+                  ];
+
+                  //
+                  if (settings.name == '/signout') {
+                    // Close AppLibrary subscription
+                    context.bloc<AppLibraryCubit>().close();
+                    // Sign out
+                    context.bloc<AuthenticationCubit>().signOut();
+                    // Redirect to Sign in page
+                    return RedirectionPage(
+                      routeName: SignInPage.route,
+                      clearHistory: true,
+                    );
+                  } else if (state is Unauthenticated &&
+                      !unauthenticatedRoutes.contains(settings.name)) {
+                    // Redirect to Sign in page
+                    return RedirectionPage(
+                      routeName: SignInPage.route,
+                      clearHistory: true,
+                    );
+                  } else if (state is Unauthenticated &&
+                      unauthenticatedRoutes.contains(settings.name)) {
+                    // Auth pages
+                    return path.builder(context, match);
+                  } else if (state is Authenticated &&
+                      unauthenticatedRoutes.contains(settings.name)) {
+                    // Redirect to root page
+                    return RedirectionPage(
+                      routeName: RootPage.route,
+                      clearHistory: true,
+                    );
+                  } else if (state is Authenticated &&
+                      state.user != null &&
+                      !unauthenticatedRoutes.contains(settings.name)) {
+                    // Authenticated pages
+                    return path.builder(context, match);
+                  } else {
+                    // Processing page
+                    return Scaffold(
+                      body: Center(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
             );

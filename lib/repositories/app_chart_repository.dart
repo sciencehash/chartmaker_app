@@ -24,4 +24,10 @@ abstract class AppChartRepository {
     @required String userId,
     @required String chartId,
   });
+
+  //
+  Future<AppChart> onceChart({
+    @required String userId,
+    @required String chartId,
+  });
 }

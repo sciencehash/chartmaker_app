@@ -65,9 +65,11 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
                             message:
                                 "You don't have charts yet, you can add one now.",
                             buttonLabel: 'Add new Chart',
-                            onButtonPressed: () => Navigator.pushNamed(
-                              context,
-                              ChartEditor.baseRoute,
+                            onButtonPressed: () => showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (BuildContext context) =>
+                                  EnginesBottomSheet(),
                             ),
                           ),
                       ],

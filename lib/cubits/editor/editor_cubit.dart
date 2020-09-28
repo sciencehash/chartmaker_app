@@ -8,15 +8,23 @@ import 'dart:html';
 import '../../repositories/chart_template_repository.dart';
 
 import '../../models/app_chart.dart';
+import '../../repositories/app_chart_repository.dart';
 
 part 'editor_state.dart';
 
 class EditorCubit extends Cubit<EditorState> {
+  final AppChartRepository _appChartRepository;
+
   final String templateId;
+
+  EditorCubit({
+    AppChartRepository appChartRepository,
+    this.templateId,
+  })  : _appChartRepository = appChartRepository,
+        super(EditorInitial());
+
   Window _window;
   IFrameElement _iframeElement;
-
-  EditorCubit({this.templateId}) : super(EditorInitial());
 
   void loadEditorFromChartTemplate({
     @required String userId,
@@ -44,7 +52,20 @@ class EditorCubit extends Cubit<EditorState> {
     ));
   }
 
-  void loadEditorFromAppChart({@required AppChart appChart}) {}
+  void loadEditorFromAppChart({
+    @required String userId,
+    @required String appChartId,
+  }) async {
+    //
+    AppChart appChart = await _appChartRepository.onceChart(
+      userId: userId,
+      chartId: appChartId,
+    );
+    //
+    emit(EditorLoaded(
+      appChart: appChart,
+    ));
+  }
 
   void updateChart({@required AppChart appChart}) {
     emit(EditorLoaded(
@@ -52,12 +73,15 @@ class EditorCubit extends Cubit<EditorState> {
     ));
   }
 
+  ///
   void setCurrentWindowAndIFrame(Window win, IFrameElement iframe) {
     _window = win;
     _iframeElement = iframe;
   }
 
-  void downloadAsPNG() {
+  ///
+  void downloadAsPNG({String filename}) {
+    filename ??= templateId != null ? '$templateId.png' : 'chartimage.png';
     if (_window != null && _iframeElement != null) {
       //
       onMessage(event) {
@@ -73,7 +97,7 @@ class EditorCubit extends Cubit<EditorState> {
           AnchorElement anchorElement = AnchorElement(
             href: data,
           );
-          anchorElement.download = 'chartimage.png';
+          anchorElement.download = filename;
           anchorElement.click();
         }
       }
