@@ -46,7 +46,7 @@ class TemplatesBottomSheet extends StatelessWidget {
                       child: Container(
                         constraints: BoxConstraints.expand(),
                         child: Image.asset(
-                          'images/templates/${template['id']}.png',
+                          'assets/images/templates/${template['id']}.png',
                           fit: BoxFit.fitWidth,
                         ),
                       ),

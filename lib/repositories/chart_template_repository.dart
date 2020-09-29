@@ -36,7 +36,7 @@ class ChartTemplateRepository {
         'options': {},
       },
     },
-// Template
+    // Template
     {
       'id': 'chartjs-basic-line',
       'lib': 'chartjs',
