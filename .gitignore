@@ -36,7 +36,6 @@
 /macos/
 /windows/
 /linux/
-/web/
 pubspec.lock
 
 # Web related
