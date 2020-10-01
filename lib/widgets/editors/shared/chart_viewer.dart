@@ -5,6 +5,7 @@ import 'dart:html';
 
 // import 'dart:ui' as ui;
 import 'package:chartmaker_app/cubits/editor/editor_cubit.dart';
+import 'package:chartmaker_app/widgets/editors/utils/EditorUtils.dart';
 
 import 'UiFake.dart' if (dart.library.html) 'dart:ui' as ui;
 
@@ -38,8 +39,8 @@ class _ChartViewerState extends State<ChartViewer> {
 
   onMessageListener(event) {
     final data = (event as MessageEvent).data;
-    // if data is: frameId newHeight
-    if (data != 'rid' && !data.startsWith('base64ImageURI')) {
+    // if data is: height newHeight
+    if (data.startsWith('height')) {
       // Update iframe height
       final frData = (event as MessageEvent).data.split(' ');
       if (this.mounted) {
@@ -48,33 +49,6 @@ class _ChartViewerState extends State<ChartViewer> {
         });
       }
     }
-    // rid: Request initial data, to send iframe ID and chart configuration
-    if (data == 'rid') {
-      // print((event as MessageEvent).data);
-      if (_iframeElement.contentWindow != null) {
-        // Send initial data, iframe ID and chart configuration
-        _iframeElement.contentWindow.postMessage(
-          'viewerIframeID ${Utils.chartConfigToBase64({
-            'lib': widget.lib,
-            'config': widget.config,
-          })}',
-          '*',
-        );
-      }
-    }
-  }
-
-  onResizeListener(event) {
-    if (_iframeElement.contentWindow != null) {
-      // Send initial data, iframe ID and chart configuration
-      _iframeElement.contentWindow.postMessage(
-        'viewerIframeID ${Utils.chartConfigToBase64({
-          'lib': widget.lib,
-          'config': widget.config,
-        })}',
-        '*',
-      );
-    }
   }
 
   @override
@@ -82,9 +56,11 @@ class _ChartViewerState extends State<ChartViewer> {
     final rand = math.Random();
     randomViewId = 'iframeElement' + rand.nextInt(100000).toString();
 
-    final srcdoc = widget.lib == 'chartjs'
-        ? '''<canvas id="chart"></canvas><script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script><script src="chartmaker.min.js"></script>'''
-        : '''<div id="chart"></div><script src="https://cdn.jsdelivr.net/npm/apexcharts"></script><script src="chartmaker.min.js"></script>''';
+    final srcdoc = EditorUtils.getEmbedContent(
+      lib: widget.lib,
+      config: widget.config,
+      withEditorScript: true,
+    );
 
     ui.platformViewRegistry.registerViewFactory(
       randomViewId,
@@ -97,8 +73,6 @@ class _ChartViewerState extends State<ChartViewer> {
 
     // Add listener
     window.addEventListener('message', onMessageListener);
-    // Add listener
-    window.addEventListener('resize', onResizeListener);
 
     //
     context.bloc<EditorCubit>().setCurrentWindowAndIFrame(
@@ -112,15 +86,13 @@ class _ChartViewerState extends State<ChartViewer> {
   @override
   void didUpdateWidget(ChartViewer oldWidget) {
     //
-    if (_iframeElement.contentWindow != null) {
-      _iframeElement.contentWindow.postMessage(
-        'viewerIframeID ${Utils.chartConfigToBase64({
-          'lib': widget.lib,
-          'config': widget.config,
-        })}',
-        '*',
-      );
-    }
+    final srcdoc = EditorUtils.getEmbedContent(
+      lib: widget.lib,
+      config: widget.config,
+      withEditorScript: true,
+    );
+    _iframeElement.srcdoc = srcdoc;
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -128,8 +100,6 @@ class _ChartViewerState extends State<ChartViewer> {
   void dispose() {
     // Remove listener
     window.removeEventListener('message', onMessageListener);
-    // Remove listener
-    window.removeEventListener('resize', onResizeListener);
 
     super.dispose();
   }

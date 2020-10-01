@@ -139,7 +139,7 @@ class ChartTemplateRepository {
                 ChartjsTemplateUtils.randomScalingFactor(),
                 ChartjsTemplateUtils.randomScalingFactor()
               ],
-              'yAxisID': 'y',
+              'yAxisID': 'y-axis-1',
             },
             {
               'label': 'My Second dataset',
@@ -155,7 +155,7 @@ class ChartTemplateRepository {
                 ChartjsTemplateUtils.randomScalingFactor(),
                 ChartjsTemplateUtils.randomScalingFactor()
               ],
-              'yAxisID': 'y1'
+              'yAxisID': 'y-axis-2'
             }
           ]
         },
@@ -168,23 +168,28 @@ class ChartTemplateRepository {
             'text': 'Chart.js Line Chart - Multi Axis'
           },
           'scales': {
-            'y': {
-              'type': 'linear',
-// only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-              'display': true,
-              'position': 'left',
-            },
-            'y1': {
-              'type': 'linear',
-// only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-              'display': true,
-              'position': 'right',
-// grid line settings
-              'gridLines': {
-                'drawOnChartArea': false,
-// only want the grid lines for one axis to show up
+            'yAxes': [
+              {
+                'type': 'linear',
+                // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                'display': true,
+                'position': 'left',
+                'id': 'y-axis-1',
               },
-            },
+              {
+                'type': 'linear',
+                // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                'display': true,
+                'position': 'right',
+                'id': 'y-axis-2',
+
+                // grid line settings
+                'gridLines': {
+                  'drawOnChartArea': false,
+                  // only want the grid lines for one axis to show up
+                },
+              }
+            ],
           }
         }
       },
@@ -201,7 +206,7 @@ class ChartTemplateRepository {
           'datasets': [
             {
               'label': 'stepped: true',
-              'stepped': true,
+              'steppedLine': true,
               'data': [
                 ChartjsTemplateUtils.randomScalingFactor(),
                 ChartjsTemplateUtils.randomScalingFactor(),
@@ -624,7 +629,7 @@ class ChartTemplateRepository {
       'lib': 'chartjs',
       'title': 'Horizontal Bar Chart',
       'config': {
-        'type': 'bar',
+        'type': 'horizontalBar',
         'data': {
           'labels': [
             'January',
@@ -668,9 +673,8 @@ class ChartTemplateRepository {
           ]
         },
         'options': {
-          'indexAxis': 'y',
-// Elements options apply to all of the options unless overridden in a dataset
-// In this case, we are setting the border of each horizontal bar to be 2px wide
+          // Elements options apply to all of the options unless overridden in a dataset
+          // In this case, we are setting the border of each horizontal bar to be 2px wide
           'elements': {
             'rectangle': {
               'borderWidth': 2,
@@ -680,7 +684,10 @@ class ChartTemplateRepository {
           'legend': {
             'position': 'right',
           },
-          'title': {'display': true, 'text': 'Chart.js Horizontal Bar Chart'}
+          'title': {
+            'display': true,
+            'text': 'Chart.js Horizontal Bar Chart',
+          }
         }
       },
     },
@@ -772,7 +779,7 @@ class ChartTemplateRepository {
                 ChartjsTemplateUtils.chartColors['purple'],
                 ChartjsTemplateUtils.chartColors['red'],
               ],
-              'yAxisID': 'y',
+              'yAxisID': 'y-axis-1',
               'data': [
                 ChartjsTemplateUtils.randomScalingFactor(),
                 ChartjsTemplateUtils.randomScalingFactor(),
@@ -786,7 +793,7 @@ class ChartTemplateRepository {
             {
               'label': 'Dataset 2',
               'backgroundColor': ChartjsTemplateUtils.chartColors['grey'],
-              'yAxisID': 'y1',
+              'yAxisID': 'y-axis-2',
               'data': [
                 ChartjsTemplateUtils.randomScalingFactor(),
                 ChartjsTemplateUtils.randomScalingFactor(),
@@ -801,20 +808,34 @@ class ChartTemplateRepository {
         },
         'options': {
           'responsive': true,
-          'title': {'display': true, 'text': 'Chart.js Bar Chart - Multi Axis'},
-          'tooltips': {'mode': 'index', 'intersect': true},
+          'title': {
+            'display': true,
+            'text': 'Chart.js Bar Chart - Multi Axis',
+          },
+          'tooltips': {
+            'mode': 'index',
+            'intersect': true,
+          },
           'scales': {
-            'y': {
-              'type': 'linear',
-              'display': true,
-              'position': 'left',
-            },
-            'y1': {
-              'type': 'linear',
-              'display': true,
-              'position': 'right',
-              'gridLines': {'drawOnChartArea': false}
-            },
+            'yAxes': [
+              {
+                'type': 'linear',
+                // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                'display': true,
+                'position': 'left',
+                'id': 'y-axis-1',
+              },
+              {
+                'type': 'linear',
+                // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                'display': true,
+                'position': 'right',
+                'id': 'y-axis-2',
+                'gridLines': {
+                  'drawOnChartArea': false,
+                }
+              }
+            ],
           }
         }
       },
@@ -879,14 +900,24 @@ class ChartTemplateRepository {
           ]
         },
         'options': {
-          'title': {'display': true, 'text': 'Chart.js Bar Chart - Stacked'},
-          'tooltips': {'mode': 'index', 'intersect': false},
+          'title': {
+            'display': true,
+            'text': 'Chart.js Bar Chart - Stacked',
+          },
+          'tooltips': {
+            'mode': 'index',
+            'intersect': false,
+          },
           'responsive': true,
           'scales': {
-            'x': {
-              'stacked': true,
-            },
-            'y': {'stacked': true}
+            'xAxes': [
+              {
+                'stacked': true,
+              }
+            ],
+            'yAxes': [
+              {'stacked': true}
+            ]
           }
         }
       },

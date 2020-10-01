@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'dart:convert';
+import 'package:chartmaker_app/widgets/editors/utils/EditorUtils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,47 +21,10 @@ class EmbedContent extends StatelessWidget {
     _lib = appChart.config['lib'];
 
     //
-    math.Random rand = math.Random();
-    final String iFrameId = 'iFrame${rand.nextInt(99999)}';
-
-    final String chartId = 'chart${rand.nextInt(99999)}';
-
-    //
-    StringBuffer jsString = StringBuffer();
-
-    String chartConfig = jsonEncode(appChart.config['config']);
-
-    // Replace JSON key format ("key":) to JavaScript key format (key:)
-    chartConfig = chartConfig.replaceAllMapped(
-      RegExp(r'"([^"]+?)"\s*:'),
-      (Match m) => '${m[1]}:',
+    _textController.text = EditorUtils.getEmbedContent(
+      lib: _lib,
+      config: appChart.config['config'],
     );
-
-    //
-    if (_lib == 'chartjs') {
-      //
-      jsString.write(
-        '''chartjs = new Chart(document.getElementById('$chartId').getContext('2d'), $chartConfig);''',
-      );
-
-      _textController.text = '''<canvas id="$chartId"></canvas>''';
-      _textController.text +=
-          '''<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>''';
-    } else if (_lib == 'apexcharts') {
-      //
-      jsString.write(
-        '''apexchart = new ApexCharts(document.querySelector("#$chartId"), $chartConfig);''',
-      );
-      //
-      jsString.write('''apexchart.render();''');
-
-      _textController.text = '''<div id="$chartId"></div>''';
-      _textController.text +=
-          '''<<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>''';
-    }
-
-    //
-    _textController.text += '''<script>${jsString.toString()}</script>''';
 
     //
     return Column(
