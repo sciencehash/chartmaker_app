@@ -104,10 +104,10 @@ class _EditorScaffoldState extends State<EditorScaffold> {
                 child: Scrollbar(
                   child: ListView(
                     children: [
-                      DrawerHeader(
-                        child: Text('a'),
-
-                      ),
+                      // DrawerHeader(
+                      //   child: Text('a'),
+                      // ),
+                      SizedBox(height: 30),
                       DrawerMenu(),
                     ],
                   ),

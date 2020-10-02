@@ -27,7 +27,7 @@
             // Get canvas or div element
             let chartElement = document.getElementById(chartId);
             // chartElement has 'height' for canvas and has 'clientHeight' for div
-            let height = chartElement.height || chartElement.clientHeight;
+            let height = chartElement.clientHeight;
             // Report new height
             window.top.postMessage(`height ${height + 20}`, '*');
         }

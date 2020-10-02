@@ -33,7 +33,7 @@ class _ChartViewerState extends State<ChartViewer> {
 
   final IFrameElement _iframeElement = IFrameElement();
 
-  double iframeHeight = 500;
+  double iframeHeight = 1;
 
   bool chartInitiated = false;
 
@@ -106,13 +106,21 @@ class _ChartViewerState extends State<ChartViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 400,
-      height: iframeHeight,
-      child: HtmlElementView(
-        key: Key('chartiframe'),
-        viewType: randomViewId,
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          height: iframeHeight,
+          child: HtmlElementView(
+            key: Key('chartiframe'),
+            viewType: randomViewId,
+          ),
+        ),
+        if (iframeHeight == 1)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 70),
+            child: CircularProgressIndicator(strokeWidth: 1),
+          ),
+      ],
     );
   }
 }

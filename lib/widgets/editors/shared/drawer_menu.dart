@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../cubits/editor/editor_cubit.dart';
+import 'dataset_bottom_sheet.dart';
+import 'embed_content.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({
@@ -17,44 +22,44 @@ class DrawerMenu extends StatelessWidget {
         if (!drawerMode) SizedBox(height: 25),
         //
         _MainMenuTile(
-          icon: Icons.library_books,
-          label: 'My library',
-          routeName: '/', // TEMP //LibraryChartsPage.route,
+          icon: Icons.equalizer,
+          label: 'Datasets',
+          drawerMode: drawerMode,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: context.bloc<EditorCubit>(),
+                  child: DatasetBottomSheet(),
+                ),
+              ),
+            );
+          },
+        ),
+        //
+        _MainMenuTile(
+          icon: Icons.code,
+          label: 'Embed',
+          onPressed: () {
+            Navigator.pop(context);
+            showBottomSheet(
+                context: context,
+                builder: (context) {
+                  return EmbedContent();
+                });
+          },
           drawerMode: drawerMode,
         ),
         //
-//         _MainMenuTile(
-//           icon: Icons.settings,
-//           label: 'Settings',
-//           routeName: SettingsPage.route,
-//           drawerMode: drawerMode,
-//         ),
-//         //
-//         _MainMenuTile(
-//           icon: Icons.help,
-//           label: 'Help',
-//           routeName: HelpPage.route,
-//           drawerMode: drawerMode,
-//         ),
-//         //
-//         _MainMenuTile(
-//           icon: Icons.announcement,
-//           label: 'Send feedback',
-//           routeName: SendFeedbackPage.route,
-//           drawerMode: drawerMode,
-//         ),
-// //        //
-//        _MainMenuTile(
-//          icon: Icons.forward,
-//          label: 'Student area',
-//          routeName: '/student-area',
-//          drawerMode: drawerMode,
-//        ),
-        //
         _MainMenuTile(
-          icon: Icons.exit_to_app,
-          label: 'Sign out',
-          routeName: '/signout',
+          icon: Icons.file_download,
+          label: 'Export',
+          onPressed: () {
+            Navigator.pop(context);
+            context.bloc<EditorCubit>().downloadAsPNG();
+          },
           drawerMode: drawerMode,
         ),
       ],
@@ -63,27 +68,29 @@ class DrawerMenu extends StatelessWidget {
 }
 
 class _MainMenuTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String routeName;
+  final Function onPressed;
+  final bool drawerMode;
+
   const _MainMenuTile({
     Key key,
     this.icon,
     this.label,
     this.routeName,
+    this.onPressed,
     this.drawerMode = false,
   }) : super(key: key);
-
-  final IconData icon;
-  final String label;
-  final String routeName;
-  final bool drawerMode;
 
   @override
   Widget build(BuildContext context) {
     //
     final String currentRouteName = ModalRoute.of(context).settings.name;
     //
-    final bool isActiveItem =
+    final bool isActiveItem = routeName == null ? false : (
         (routeName == '/' && currentRouteName == routeName) ||
-            (routeName != '/' && currentRouteName.startsWith(routeName));
+            (routeName != '/' && currentRouteName.startsWith(routeName)));
 
     //
     return Material(
@@ -115,7 +122,7 @@ class _MainMenuTile extends StatelessWidget {
             ],
           ),
         ),
-        onTap: () {
+        onTap: onPressed ?? () {
           if (ModalRoute.of(context).settings.name != routeName) {
             Navigator.pushNamed(context, routeName);
           }
