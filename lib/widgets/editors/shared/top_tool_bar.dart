@@ -1,10 +1,9 @@
-import 'dart:html' as html;
-
-import 'package:chartmaker_app/cubits/editor/editor_cubit.dart';
-import 'package:chartmaker_app/widgets/editors/shared/dataset_bottom_sheet.dart';
-import 'package:chartmaker_app/widgets/editors/shared/embed_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../cubits/editor/editor_cubit.dart';
+import '../../../widgets/editors/shared/dataset_bottom_sheet.dart';
+import '../../../widgets/editors/shared/embed_content.dart';
 
 enum DatasetMenuOptions { edit, import, export }
 enum ExportMenuOptions { asPNG, getCode }
@@ -24,14 +23,6 @@ class TopToolBar extends StatelessWidget {
             icon: Icon(Icons.equalizer),
             label: Text('Datasets'),
             onPressed: () {
-              // showModalBottomSheet(
-              //   context: context,
-              //   isScrollControlled: true,
-              //   builder: (_) => BlocProvider.value(
-              //     value: context.bloc<EditorCubit>(),
-              //     child: DatasetBottomSheet(),
-              //   ),
-              // );
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -43,75 +34,19 @@ class TopToolBar extends StatelessWidget {
               );
             },
           ),
-          // PopupMenuButton<DatasetMenuOptions>(
-          //   child: Padding(
-          //     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 14),
-          //     child: Row(
-          //       children: [
-          //         Icon(Icons.equalizer),
-          //         SizedBox(width: 8),
-          //         Text('Dataset'),
-          //       ],
-          //     ),
-          //   ),
-          //   offset: Offset(0, 37),
-          //   onSelected: (DatasetMenuOptions result) {
-          //     // setState(() {
-          //     //   _selection = result;
-          //     // });
-          //   },
-          //   itemBuilder: (BuildContext context) => <PopupMenuEntry<DatasetMenuOptions>>[
-          //     const PopupMenuItem<DatasetMenuOptions>(
-          //       value: DatasetMenuOptions.edit,
-          //       child: Text('Edit'),
-          //     ),
-          //     const PopupMenuItem<DatasetMenuOptions>(
-          //       value: DatasetMenuOptions.import,
-          //       child: Text('Import'),
-          //     ),
-          //     const PopupMenuItem<DatasetMenuOptions>(
-          //       value: DatasetMenuOptions.export,
-          //       child: Text('Export'),
-          //     ),
-          //   ],
-          // ),
           Expanded(child: SizedBox()),
           FlatButton.icon(
             icon: Icon(Icons.code),
             label: Text('Embed'),
-            onPressed: () {
-              showBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return EmbedContent();
-                  });
+            onPressed: () async {
+              await showModalBottomSheet(
+                context: context,
+                builder: (_) => BlocProvider.value(
+                  value: context.bloc<EditorCubit>(),
+                  child: EmbedContent(),
+                ),
+              );
 
-              // showDialog<void>(
-              //   context: context,
-              //   barrierDismissible: false, // user must tap button!
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: Text('Help'),
-              //       content: SingleChildScrollView(
-              //         child: ListBody(
-              //           children: <Widget>[
-              //             SelectableText(
-              //               'Each dataset allows you to configure options that will replace the general options of the chart.',
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       actions: <Widget>[
-              //         FlatButton(
-              //           child: Text('Ok'),
-              //           onPressed: () {
-              //             Navigator.of(context).pop();
-              //           },
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // );
             },
           ),
           // FlatButton.icon(

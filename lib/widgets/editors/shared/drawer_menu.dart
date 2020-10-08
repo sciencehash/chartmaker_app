@@ -6,12 +6,14 @@ import 'dataset_bottom_sheet.dart';
 import 'embed_content.dart';
 
 class DrawerMenu extends StatelessWidget {
+  final VoidCallback onSavePressed;
+  final bool drawerMode;
+
   const DrawerMenu({
     Key key,
     this.drawerMode = true,
+    @required this.onSavePressed,
   }) : super(key: key);
-
-  final bool drawerMode;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,30 @@ class DrawerMenu extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        if (!drawerMode) SizedBox(height: 25),
+        SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            OutlineButton(
+              child: Text('Save Chart'),
+              onPressed: () {
+                Navigator.pop(context);
+                onSavePressed();
+              },
+            ),
+            SizedBox(width: 20),
+            IconButton(
+              icon: Icon(Icons.arrow_downward),
+              onPressed: () => Navigator.pop(context),
+            ),
+            SizedBox(width: 15),
+          ],
+        ),
+        Divider(
+          height: 12,
+          thickness: .5,
+        ),
+        SizedBox(height: 10),
         //
         _MainMenuTile(
           icon: Icons.equalizer,
@@ -42,13 +67,16 @@ class DrawerMenu extends StatelessWidget {
         _MainMenuTile(
           icon: Icons.code,
           label: 'Embed',
-          onPressed: () {
+          onPressed: () async {
             Navigator.pop(context);
-            showBottomSheet(
-                context: context,
-                builder: (context) {
-                  return EmbedContent();
-                });
+            //
+            await showModalBottomSheet(
+              context: context,
+              builder: (_) => BlocProvider.value(
+                value: context.bloc<EditorCubit>(),
+                child: EmbedContent(),
+              ),
+            );
           },
           drawerMode: drawerMode,
         ),
@@ -57,7 +85,9 @@ class DrawerMenu extends StatelessWidget {
           icon: Icons.file_download,
           label: 'Export',
           onPressed: () {
+            // Close the bottom sheet
             Navigator.pop(context);
+            // Request the PNG
             context.bloc<EditorCubit>().downloadAsPNG();
           },
           drawerMode: drawerMode,
@@ -88,8 +118,9 @@ class _MainMenuTile extends StatelessWidget {
     //
     final String currentRouteName = ModalRoute.of(context).settings.name;
     //
-    final bool isActiveItem = routeName == null ? false : (
-        (routeName == '/' && currentRouteName == routeName) ||
+    final bool isActiveItem = routeName == null
+        ? false
+        : ((routeName == '/' && currentRouteName == routeName) ||
             (routeName != '/' && currentRouteName.startsWith(routeName)));
 
     //
@@ -122,11 +153,12 @@ class _MainMenuTile extends StatelessWidget {
             ],
           ),
         ),
-        onTap: onPressed ?? () {
-          if (ModalRoute.of(context).settings.name != routeName) {
-            Navigator.pushNamed(context, routeName);
-          }
-        },
+        onTap: onPressed ??
+            () {
+              if (ModalRoute.of(context).settings.name != routeName) {
+                Navigator.pushNamed(context, routeName);
+              }
+            },
       ),
     );
   }

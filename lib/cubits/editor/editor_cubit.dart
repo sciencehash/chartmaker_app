@@ -67,9 +67,13 @@ class EditorCubit extends Cubit<EditorState> {
     ));
   }
 
-  void updateChart({@required AppChart appChart}) {
+  void updateChart({
+    AppChart appChart,
+    bool hideViewer,
+  }) {
     emit(EditorLoaded(
-      appChart: appChart,
+      appChart: appChart ?? (this.state as EditorLoaded).appChart,
+      hideViewer: hideViewer ?? (this.state as EditorLoaded).hideViewer,
     ));
   }
 
@@ -80,7 +84,7 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   ///
-  void downloadAsPNG({String filename}) {
+  void downloadAsPNG({String filename}) async {
     filename ??= templateId != null ? '$templateId.png' : 'chartimage.png';
     if (_window != null && _iframeElement != null) {
       //
@@ -106,10 +110,16 @@ class EditorCubit extends Cubit<EditorState> {
       _window.addEventListener('message', onMessage);
 
       //
-      _iframeElement.contentWindow.postMessage(
-        'getBase64ImageURI',
-        '*',
-      );
+      for (int i = 0; i < 100; i++) {
+        if (_iframeElement.contentWindow != null) {
+          _iframeElement.contentWindow.postMessage(
+            'getBase64ImageURI',
+            '*',
+          );
+          break;
+        }
+        await Future.delayed(Duration(milliseconds: 250));
+      }
     }
   }
 }

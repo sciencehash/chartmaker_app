@@ -37,10 +37,13 @@
     window.addEventListener('message', function (event) {
         if (event.data === 'getBase64ImageURI') {
             if (lib === 'chartjs') {
-                // Get chart as PNG
-                base64ImageURI = chartjs.toBase64Image();
-                // Return PNG data
-                window.top.postMessage(`base64ImageURI${base64ImageURI}`, '*');
+                // Waiting to starting ending
+                window.setTimeout(function () {
+                    // Get chart as PNG
+                    base64ImageURI = chartjs.toBase64Image();
+                    // Return PNG data
+                    window.top.postMessage(`base64ImageURI${base64ImageURI}`, '*');
+                }, 2000);
             } else if (lib === 'apexcharts') {
                 // Waiting to starting animation ending
                 window.setTimeout(function () {
@@ -49,7 +52,7 @@
                         // Return PNG data
                         window.top.postMessage(`base64ImageURI${uri.imgURI}`, '*');
                     });
-                }, 1000);
+                }, 2000);
             }
         }
     });

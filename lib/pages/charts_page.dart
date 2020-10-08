@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
 
-import '../models/app_library.dart';
 import '../cubits/app_library/app_library_cubit.dart';
 
 import '../models/app_chart.dart';
@@ -15,6 +14,7 @@ import '../widgets/app/bloc_loading_progress_indicator.dart';
 import '../widgets/app/empty_list_message.dart';
 import '../widgets/charts_page/charts_table.dart';
 import '../widgets/charts_page/charts_grid.dart';
+import '../widgets/charts_page/charts_list.dart';
 import 'editor.dart';
 
 class LibraryChartsPage extends StatefulWidget {
@@ -43,6 +43,12 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
     final String uid =
         (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
 
+    //
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Same that AppScaffold drawerMaxScreenWidth
+    final minTableWidth = 900;
+
     return AppScaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -57,9 +63,13 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
                         PageTitle(
                             title: 'Charts', details: 'Your saved charts'),
                         if (chartState.appCharts.length > 0)
-                          ChartsPageTable(
-                            charts: chartState.appCharts,
-                          ),
+                          screenWidth > minTableWidth
+                              ? ChartsPageTable(
+                                  charts: chartState.appCharts,
+                                )
+                              : ChartsPageList(
+                                  charts: chartState.appCharts,
+                                ),
                         if (chartState.appCharts.length == 0)
                           EmptyListMessage(
                             message:

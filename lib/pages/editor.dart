@@ -1,14 +1,15 @@
-import 'package:auth/auth.dart';
-import 'package:chartmaker_app/cubits/app_library/app_library_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auth/auth.dart';
 
+import '../cubits/app_library/app_library_cubit.dart';
 import '../cubits/app_chart/app_chart_cubit.dart';
 import '../cubits/editor/editor_cubit.dart';
 import '../widgets/editors/shared/editor_scaffold.dart';
-import '../widgets/app/page_title.dart';
 import '../widgets/app/bloc_loading_progress_indicator.dart';
 import '../widgets/editors/shared/chart_viewer.dart';
+import '../widgets/editors/chartjs/basic_panel.dart';
+import '../widgets/editors/apexcharts/basic_panel.dart';
 
 class ChartEditor extends StatefulWidget {
   static const String baseRoute = '/editor';
@@ -22,10 +23,8 @@ class ChartEditor extends StatefulWidget {
 }
 
 class _ChartEditorState extends State<ChartEditor> {
-
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -51,19 +50,106 @@ class _ChartEditorState extends State<ChartEditor> {
               Tab(icon: Icon(Icons.art_track)), // Legend
             ],
             leftTabViewChildren: <Widget>[
+              // Basic panel
+              editorState.appChart.config['lib'] == 'apexcharts'
+                  ? ApexChartsBasicPanel()
+                  : ChartJsBasicPanel(),
+              // Animations panel
               Container(
-                child: Text('Basic'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Animations options',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(height: 20),
+                    Text('Nothing here yet'),
+                  ],
+                ),
                 padding: EdgeInsets.all(20),
               ),
-              Container(child: Text('Animations'), padding: EdgeInsets.all(20)),
-              Container(child: Text('DataLabels'), padding: EdgeInsets.all(20)),
+              // DataLabels panel
               Container(
-                  child: Text('Interactivity'), padding: EdgeInsets.all(20)),
-              Container(child: Text('Grid'), padding: EdgeInsets.all(20)),
-              Container(child: Text('Legend'), padding: EdgeInsets.all(20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'DataLabels options',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(height: 20),
+                    Text('Nothing here yet'),
+                  ],
+                ),
+                padding: EdgeInsets.all(20),
+              ),
+              // Interactivity panel
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Interactivity options',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(height: 20),
+                    Text('Nothing here yet'),
+                  ],
+                ),
+                padding: EdgeInsets.all(20),
+              ),
+              // Grid panel
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Grid options',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(height: 20),
+                    Text('Nothing here yet'),
+                  ],
+                ),
+                padding: EdgeInsets.all(20),
+              ),
+              // Legend panel
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Legend options',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(height: 20),
+                    Text('Nothing here yet'),
+                  ],
+                ),
+                padding: EdgeInsets.all(20),
+              ),
             ],
             body: ListView(
               children: [
+                if (editorState.hideViewer)
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height,
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 30),
+                        Text('Waiting for your choice'),
+                        SizedBox(height: 12),
+                        Container(
+                          width: 200,
+                          height: 2,
+                          child: LinearProgressIndicator(),
+                        ),
+                      ],
+                    ),
+                  ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   width: double.infinity,

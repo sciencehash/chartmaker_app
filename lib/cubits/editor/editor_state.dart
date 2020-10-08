@@ -11,9 +11,11 @@ class EditorInitial extends EditorState {
 
 class EditorLoaded extends EditorState {
   final AppChart appChart;
+  final bool hideViewer;
 
   const EditorLoaded({
     @required this.appChart,
+    this.hideViewer = false,
   });
 
   // @override

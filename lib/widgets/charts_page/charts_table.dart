@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// import '../../cubits/local_storage/local_storage_cubit.dart';
 import '../../models/app_chart.dart';
 import '../../cubits/app_chart/app_chart_cubit.dart';
 import '../../pages/editor.dart';
@@ -13,6 +12,11 @@ class ChartsPageTable extends StatelessWidget {
     Key key,
     @required this.charts,
   }) : super(key: key);
+
+  final Map _chartEngines = {
+    'chartjs': 'Chart.js',
+    'apexcharts': 'ApexCharts',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,12 @@ class ChartsPageTable extends StatelessWidget {
         DataColumn(
           label: Text(
             'Title',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Engine',
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
         ),
@@ -57,6 +67,12 @@ class ChartsPageTable extends StatelessWidget {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(chart.title),
+                ),
+              ),
+              DataCell(
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(_chartEngines[chart.config['lib']]),
                 ),
               ),
               DataCell(

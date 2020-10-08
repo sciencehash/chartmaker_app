@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cubits/editor/editor_cubit.dart';
 import 'drawer_menu.dart';
 import 'top_tool_bar.dart';
 import 'left_panels_tabs.dart';
@@ -85,7 +87,27 @@ class _EditorScaffoldState extends State<EditorScaffold> {
         ),
         centerTitle: false,
         actions: screenWidth < drawerMaxScreenWidth
-            ? []
+            ? [
+                IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () async {
+                    //
+                    context.bloc<EditorCubit>().updateChart(hideViewer: true);
+                    await showModalBottomSheet(
+                      context: context,
+                      // isScrollControlled: true,
+                      builder: (_) => BlocProvider.value(
+                        value: context.bloc<EditorCubit>(),
+                        child: DrawerMenu(
+                          onSavePressed: widget.onSavePressed,
+                        ),
+                      ),
+                    );
+                    //
+                    context.bloc<EditorCubit>().updateChart(hideViewer: false);
+                  },
+                ),
+              ]
             : [
                 Padding(
                   padding: const EdgeInsets.all(5),
@@ -96,24 +118,24 @@ class _EditorScaffoldState extends State<EditorScaffold> {
                 ),
               ],
       ),
-      endDrawer: screenWidth >= drawerMaxScreenWidth
-          ? null
-          : Drawer(
-              child: Container(
-                color: Color(0xff2C333D),
-                child: Scrollbar(
-                  child: ListView(
-                    children: [
-                      // DrawerHeader(
-                      //   child: Text('a'),
-                      // ),
-                      SizedBox(height: 30),
-                      DrawerMenu(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+      // endDrawer: screenWidth >= drawerMaxScreenWidth
+      //     ? null
+      //     : Drawer(
+      //         child: Container(
+      //           color: Color(0xff2C333D),
+      //           child: Scrollbar(
+      //             child: ListView(
+      //               children: [
+      //                 // DrawerHeader(
+      //                 //   child: Text('a'),
+      //                 // ),
+      //                 SizedBox(height: 30),
+      //                 DrawerMenu(),
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //       ),
       body: screenWidth < drawerMaxScreenWidth
           ? widget._body
           : Row(

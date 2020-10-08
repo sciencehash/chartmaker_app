@@ -7,10 +7,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../cubits/editor/editor_cubit.dart';
 import '../../../models/app_chart.dart';
 
-class EmbedContent extends StatelessWidget {
+class EmbedContent extends StatefulWidget {
+  @override
+  _EmbedContentState createState() => _EmbedContentState();
+}
+
+class _EmbedContentState extends State<EmbedContent> {
   String _lib;
+
   TextEditingController _textController = TextEditingController();
+
   FocusNode _focusNode = FocusNode();
+
+  EditorCubit _editorCubit;
+
+  @override
+  void initState() {
+    //
+    context.bloc<EditorCubit>().updateChart(hideViewer: true);
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    //
+    _editorCubit = context.bloc<EditorCubit>();
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    //
+    _editorCubit.updateChart(hideViewer: false);
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
