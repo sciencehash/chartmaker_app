@@ -5,7 +5,6 @@ import 'package:auth/auth.dart';
 
 import '../cubits/app_library/app_library_cubit.dart';
 
-import '../models/app_chart.dart';
 import '../cubits/app_chart/app_chart_cubit.dart';
 
 import '../widgets/app/app_scaffold.dart';
@@ -15,7 +14,6 @@ import '../widgets/app/empty_list_message.dart';
 import '../widgets/charts_page/charts_table.dart';
 import '../widgets/charts_page/charts_grid.dart';
 import '../widgets/charts_page/charts_list.dart';
-import 'editor.dart';
 
 class LibraryChartsPage extends StatefulWidget {
   static const String baseRoute = '/library';

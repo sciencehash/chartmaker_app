@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../cubits/editor/editor_cubit.dart';
-import '../../../widgets/editors/shared/dataset_bottom_sheet.dart';
-import '../../../widgets/editors/shared/embed_content.dart';
+import '../../../pages/chart_editor/datasets_editor_page.dart';
+import '../../../widgets/chart_editor_page/shared/embed_content.dart';
 
 enum DatasetMenuOptions { edit, import, export }
 enum ExportMenuOptions { asPNG, getCode }
@@ -28,7 +28,7 @@ class TopToolBar extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
                     value: context.bloc<EditorCubit>(),
-                    child: DatasetBottomSheet(),
+                    child: DatasetsEditorPage(),
                   ),
                 ),
               );

@@ -1,7 +1,7 @@
-import 'package:chartmaker_app/pages/editor.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_sheet_scaffold.dart';
+import '../../pages/chart_editor/chart_editor_page.dart';
 import '../../repositories/chart_template_repository.dart';
 
 class TemplatesBottomSheet extends StatelessWidget {

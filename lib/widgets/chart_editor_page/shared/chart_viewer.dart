@@ -3,25 +3,20 @@ import 'dart:math' as math;
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
-// import 'dart:ui' as ui;
-import 'package:chartmaker_app/cubits/editor/editor_cubit.dart';
-import 'package:chartmaker_app/widgets/editors/utils/EditorUtils.dart';
-
 import 'UiFake.dart' if (dart.library.html) 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../utils/utils.dart';
+import '../../../models/app_chart.dart';
+import '../../../cubits/editor/editor_cubit.dart';
 
 class ChartViewer extends StatefulWidget {
-  final String lib;
-  final Map config;
+  final AppChart appChart;
 
   ChartViewer({
     Key key,
-    @required this.lib,
-    @required this.config,
+    @required this.appChart,
   }) : super(key: key);
 
   @override
@@ -38,6 +33,7 @@ class _ChartViewerState extends State<ChartViewer> {
   bool chartInitiated = false;
 
   onMessageListener(event) {
+
     final data = (event as MessageEvent).data;
     // if data is: height newHeight
     if (data.startsWith('height')) {
@@ -56,9 +52,7 @@ class _ChartViewerState extends State<ChartViewer> {
     final rand = math.Random();
     randomViewId = 'iframeElement' + rand.nextInt(100000).toString();
 
-    final srcdoc = EditorUtils.getEmbedContent(
-      lib: widget.lib,
-      config: widget.config,
+    final srcdoc = widget.appChart.getEmbedContent(
       withEditorScript: true,
     );
 
@@ -86,9 +80,7 @@ class _ChartViewerState extends State<ChartViewer> {
   @override
   void didUpdateWidget(ChartViewer oldWidget) {
     //
-    final srcdoc = EditorUtils.getEmbedContent(
-      lib: widget.lib,
-      config: widget.config,
+    final srcdoc = widget.appChart.getEmbedContent(
       withEditorScript: true,
     );
     _iframeElement.srcdoc = srcdoc;

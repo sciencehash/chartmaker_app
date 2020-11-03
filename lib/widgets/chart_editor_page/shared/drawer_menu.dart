@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../cubits/editor/editor_cubit.dart';
-import 'dataset_bottom_sheet.dart';
+import '../../../pages/chart_editor/datasets_editor_page.dart';
 import 'embed_content.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -57,7 +57,7 @@ class DrawerMenu extends StatelessWidget {
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: context.bloc<EditorCubit>(),
-                  child: DatasetBottomSheet(),
+                  child: DatasetsEditorPage(),
                 ),
               ),
             );

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/app_chart.dart';
 import '../../cubits/app_chart/app_chart_cubit.dart';
-import '../../pages/editor.dart';
+import '../../pages/chart_editor/chart_editor_page.dart';
 
 class ChartsPageList extends StatelessWidget {
   final List<AppChart> charts;

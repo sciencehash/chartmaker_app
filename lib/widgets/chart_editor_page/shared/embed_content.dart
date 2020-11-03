@@ -1,9 +1,6 @@
-import 'dart:math' as math;
-import 'dart:convert';
-import 'package:chartmaker_app/widgets/editors/utils/EditorUtils.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../cubits/editor/editor_cubit.dart';
 import '../../../models/app_chart.dart';
 
@@ -54,10 +51,7 @@ class _EmbedContentState extends State<EmbedContent> {
     _lib = appChart.config['lib'];
 
     //
-    _textController.text = EditorUtils.getEmbedContent(
-      lib: _lib,
-      config: appChart.config['config'],
-    );
+    _textController.text = appChart.getEmbedContent();
 
     //
     return Column(

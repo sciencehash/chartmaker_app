@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class EditorBottomSheetScaffold extends StatelessWidget {
+class DatasetsEditorScaffold extends StatelessWidget {
   //
   final String appBarTitle;
 
@@ -13,7 +13,7 @@ class EditorBottomSheetScaffold extends StatelessWidget {
   //
   final Function onApplyPressed;
 
-  EditorBottomSheetScaffold({
+  DatasetsEditorScaffold({
     Key key,
     @required this.appBarTitle,
     @required this.body,

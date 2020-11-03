@@ -11,12 +11,11 @@ import 'pages/auth/sign_up_page.dart';
 import 'pages/root_page.dart';
 
 import 'cubits/editor/editor_cubit.dart';
-import 'repositories/chart_template_repository.dart';
 import 'cubits/app_chart/app_chart_cubit.dart';
 import 'repositories/app_chart_repository_firebase.dart';
 import 'pages/charts_page.dart';
 
-import 'pages/editor.dart';
+import 'pages/chart_editor/chart_editor_page.dart';
 
 import 'pages/settings_page.dart';
 import 'pages/help_page.dart';

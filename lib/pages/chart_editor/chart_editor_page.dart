@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
 
-import '../cubits/app_library/app_library_cubit.dart';
-import '../cubits/app_chart/app_chart_cubit.dart';
-import '../cubits/editor/editor_cubit.dart';
-import '../widgets/editors/shared/editor_scaffold.dart';
-import '../widgets/app/bloc_loading_progress_indicator.dart';
-import '../widgets/editors/shared/chart_viewer.dart';
-import '../widgets/editors/chartjs/basic_panel.dart';
-import '../widgets/editors/apexcharts/basic_panel.dart';
+import '../../cubits/app_library/app_library_cubit.dart';
+import '../../cubits/app_chart/app_chart_cubit.dart';
+import '../../cubits/editor/editor_cubit.dart';
+import '../../widgets/chart_editor_page/shared/editor_scaffold.dart';
+import '../../widgets/app/bloc_loading_progress_indicator.dart';
+import '../../widgets/chart_editor_page/shared/chart_viewer.dart';
+import '../../widgets/chart_editor_page/chartjs/basic_panel.dart';
+import '../../widgets/chart_editor_page/apexcharts/basic_panel.dart';
 
 class ChartEditor extends StatefulWidget {
   static const String baseRoute = '/editor';
@@ -155,8 +155,7 @@ class _ChartEditorState extends State<ChartEditor> {
                   width: double.infinity,
                   color: Colors.white,
                   child: ChartViewer(
-                    lib: editorState.appChart.config['lib'],
-                    config: editorState.appChart.config['config'],
+                    appChart: editorState.appChart,
                   ),
                 ),
               ],
