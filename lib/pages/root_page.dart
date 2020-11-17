@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auth/auth.dart';
 
-import '../models/app_library.dart';
 import '../cubits/app_library/app_library_cubit.dart';
 
-import '../widgets/app/app_scaffold.dart';
+import '../widgets/app/primary_scaffold.dart';
 import '../widgets/app/bloc_loading_progress_indicator.dart';
 
 import 'redirection_page.dart';
@@ -19,10 +17,12 @@ class RootPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //
-    final String uid =
-        (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // final String uid =
+    //     (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // TODO: HARDCODED user id
+    final int uid = 1;
 
-    return AppScaffold(
+    return PrimaryScaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
         child: BlocBuilder<AppLibraryCubit, AppLibraryState>(
@@ -32,8 +32,7 @@ class RootPage extends StatelessWidget {
                 // Redirect to the first library
                 return RedirectionPage(
                   routeName: LibraryChartsPage.baseRoute +
-                      '/' +
-                      state.appLibraries.first.id,
+                      '/${state.appLibraries.first.id}',
                   clearHistory: true,
                 );
               } else {

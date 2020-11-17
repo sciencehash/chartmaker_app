@@ -8,9 +8,9 @@ part of 'app_chart.dart';
 
 AppChart _$AppChartFromJson(Map<String, dynamic> json) {
   return AppChart(
-    id: json['id'] as String,
-    userId: json['userId'] as String,
-    libraryId: json['libraryId'] as String,
+    id: json['id'] as int,
+    userId: json['userId'] as int,
+    libraryId: json['libraryId'] as int,
     title: json['title'] as String,
     config: json['config'] as Map<String, dynamic>,
     utcLastUpdate: DateTime.parse(json['utcLastUpdate'] as String),

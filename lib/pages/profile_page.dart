@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auth/auth.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/app/app_scaffold.dart';
+import '../widgets/app/primary_scaffold.dart';
 import '../widgets/app/page_title.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -12,8 +11,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final email = (context.bloc<AuthenticationCubit>().state as Authenticated).user.email;
-    return AppScaffold(
+    final email = '';// (context.bloc<AuthenticationCubit>().state as Authenticated).user.email;
+    return PrimaryScaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(

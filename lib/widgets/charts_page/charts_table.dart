@@ -96,7 +96,7 @@ class ChartsPageTable extends StatelessWidget {
             onSelectChanged: (value) {
               Navigator.pushNamed(
                 context,
-                ChartEditor.baseRoute + '/' + chart.id,
+                ChartEditor.baseRoute + '/${chart.id}',
               );
             },
           ),

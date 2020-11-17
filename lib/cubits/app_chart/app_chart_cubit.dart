@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-// import 'package:sembast/sembast.dart';
-
-// import '../../repositories/local_storage_repository.dart';
+import 'package:sembast/sembast.dart';
+import '../../stubs/sembast/sembast_stub.dart'
+    if (dart.library.io) '../../stubs/sembast/sembast_io.dart'
+    if (dart.library.html) '../../stubs/sembast/sembast_web.dart';
 
 import '../../models/app_user.dart';
 
@@ -21,18 +21,24 @@ class AppChartCubit extends Cubit<AppChartState> {
   StreamSubscription _appChartsSubscription;
   StreamSubscription _appChartSubscription;
 
+  Database db;
+
   AppChartCubit({
     @required AppChartRepository appChartRepository,
   })  : _appChartRepository = appChartRepository,
         super(AppChartInitial());
 
   void loadAppCharts({
-    String userId,
-    String libraryId,
+    int userId,
+    int libraryId,
   }) async {
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
     _appChartsSubscription?.cancel();
     _appChartsSubscription = _appChartRepository
         .charts(
+      db: db,
       userId: userId,
       libraryId: libraryId,
     )
@@ -48,104 +54,56 @@ class AppChartCubit extends Cubit<AppChartState> {
 
   void loadAppChart({
     @required AppUser user,
-    @required String chartId,
+    @required int chartId,
     bool withFileData = true,
   }) async {
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
     _appChartSubscription?.cancel();
     _appChartSubscription = _appChartRepository
         .chart(
+      db: db,
       userId: user.id,
       chartId: chartId,
     )
         .listen(
       (appChart) async {
-
-        // Default values, null for no changes
-        int localPageNum;
-        double localScale;
-
-        // If local value is more recent of remote db values
-        // if (isLocalDataMoreRecent) {
-        //   // Get pageNum saved locally (null for no changes)
-        //   localPageNum = await LocalStorageRepository.getChartPageNumber(
-        //         localStorageDb: localStorageDb,
-        //         chartId: appChart.id,
-        //       ) ??
-        //       null;
         //
-        //   // Get scale saved locally (null for no changes)
-        //   localScale = await LocalStorageRepository.getChartScale(
-        //         localStorageDb: localStorageDb,
-        //         chartId: appChart.id,
-        //       ) ??
-        //       null;
-        // } else {
-        //   // Use remote utcLastUpdate value
-        //   localUtcLastUpdate = null;
-        // }
-
-        // emit(
-        //   AppChartLoaded(
-        //     appChart.copyWith(
-        //       coverThumbnail: thumbnailData,
-        //       fileData: fileData,
-        //       pageNum: localPageNum,
-        //       scale: localScale,
-        //       utcLastUpdate: localUtcLastUpdate,
-        //     ),
-        //   ),
-        // );
       },
     );
   }
 
   void addAppChart(AppChart appChart) async {
-    _appChartRepository.addNew(appChart);
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
+    _appChartRepository.addNew(
+      db: db,
+      appChart: appChart,
+    );
   }
 
   void updateAppChart({
     @required AppChart appChart,
-    // @required Database localStorageDb,
   }) async {
-    // Get utcLastUpdate saved locally
-    // final DateTime localUtcLastUpdate =
-    //     await LocalStorageRepository.getChartUtcLastUpdate(
-    //           localStorageDb: localStorageDb,
-    //           chartId: appChart.id,
-    //         ) ??
-    //         null;
-    //
-    // // Get pageNum saved locally
-    // final localPageNum = await LocalStorageRepository.getChartPageNumber(
-    //       localStorageDb: localStorageDb,
-    //       chartId: appChart.id,
-    //     ) ??
-    //     null;
-    //
-    // // Get scale saved locally
-    // final localScale = await LocalStorageRepository.getChartScale(
-    //       localStorageDb: localStorageDb,
-    //       chartId: appChart.id,
-    //     ) ??
-    //     null;
-    //
-    // // If local value is more recent of remote db values
-    // if (localUtcLastUpdate != null &&
-    //     localUtcLastUpdate.isAfter(appChart.utcLastUpdate)) {
-    //   // Use local values in AppChart
-    //   appChart = appChart.copyWith(
-    //     pageNum: localPageNum,
-    //     scale: localScale,
-    //     utcLastUpdate: localUtcLastUpdate,
-    //   );
-    // }
-    //
-    //
-    _appChartRepository.update(appChart);
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
+    _appChartRepository.update(
+      db: db,
+      appChart: appChart,
+    );
   }
 
   void deleteAppChart(AppChart appChart) async {
-    _appChartRepository.delete(appChart);
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
+    _appChartRepository.delete(
+      db: db,
+      appChart: appChart,
+    );
   }
 
   @override

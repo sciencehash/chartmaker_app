@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/app/app_scaffold.dart';
+import '../widgets/app/primary_scaffold.dart';
 import '../widgets/app/page_title.dart';
 
 class SendFeedbackPage extends StatelessWidget {
@@ -10,7 +10,7 @@ class SendFeedbackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    return PrimaryScaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(

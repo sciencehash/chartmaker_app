@@ -8,7 +8,7 @@ part of 'app_user.dart';
 
 AppUser _$AppUserFromJson(Map<String, dynamic> json) {
   return AppUser(
-    id: json['id'] as String,
+    id: json['id'] as int,
     pCloudToken: json['pCloudToken'] as String,
     gDriveToken: json['gDriveToken'] as String,
     dropboxToken: json['dropboxToken'] as String,

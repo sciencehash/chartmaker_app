@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sembast/sembast.dart';
+import '../../stubs/sembast/sembast_stub.dart'
+if (dart.library.io) '../../stubs/sembast/sembast_io.dart'
+if (dart.library.html) '../../stubs/sembast/sembast_web.dart';
 
 import '../../models/app_library.dart';
 import '../../repositories/app_library_repository.dart';
@@ -12,32 +17,42 @@ part 'app_library_state.dart';
 class AppLibraryCubit extends Cubit<AppLibraryState> {
   final AppLibraryRepository _appLibraryRepository;
   StreamSubscription _appLibrariesSubscription;
-  bool defaultLibraryChecked = false;
 
-  String currentLibraryId;
+  Database db;
+
+  bool defaultLibraryChecked = false;
+  int currentLibraryId;
 
   AppLibraryCubit({
     @required AppLibraryRepository appLibraryRepository,
   })  : _appLibraryRepository = appLibraryRepository,
         super(AppLibraryInitial());
 
-  void loadAppLibraries({String userId}) async {
+  void loadAppLibraries({int userId}) async {
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
     _appLibrariesSubscription?.cancel();
-    _appLibrariesSubscription = _appLibraryRepository.libraries(userId: userId).listen(
-          (appLibraries) async {
-            if (!defaultLibraryChecked && appLibraries.isEmpty){
+    _appLibrariesSubscription =
+        _appLibraryRepository.libraries(db: db, userId: userId).listen(
+              (appLibraries) async {
+            if (!defaultLibraryChecked && appLibraries.isEmpty) {
               defaultLibraryChecked = true;
               await _appLibraryRepository.addNew(
-                  AppLibrary.defaultLibrary(userId),
+                db: db,
+                appLibrary: AppLibrary.defaultLibrary(userId),
               );
             }
             emit(AppLibrariesLoaded(appLibraries));
           },
-    );
+        );
   }
 
   void addAppLibrary(AppLibrary appLibrary) async {
-    _appLibraryRepository.addNew(appLibrary);
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
+    _appLibraryRepository.addNew(db: db, appLibrary: appLibrary);
   }
 
   @override

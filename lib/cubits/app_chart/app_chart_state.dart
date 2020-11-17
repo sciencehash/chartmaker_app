@@ -10,7 +10,7 @@ class AppChartInitial extends AppChartState {
 }
 
 class AppChartsLoaded extends AppChartState {
-  final String libraryId;
+  final int libraryId;
   final List<AppChart> appCharts;
 
   const AppChartsLoaded({

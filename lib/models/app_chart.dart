@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/timestamp.dart';
 
 part 'app_chart.g.dart';
 
 @JsonSerializable(nullable: false)
-class AppChart extends Equatable {
+ class AppChart extends Equatable {
   AppChart({
     @required this.id,
     @required this.userId,
@@ -23,9 +24,9 @@ class AppChart extends Equatable {
     this.thumbnail,
   });
 
-  final String id;
-  final String userId;
-  final String libraryId;
+  final int id;
+  final int userId;
+  final int libraryId;
   final String title;
   final Map config;
   final DateTime utcLastUpdate;
@@ -48,9 +49,9 @@ class AppChart extends Equatable {
       ];
 
   AppChart copyWith({
-    String id,
-    String userId,
-    String libraryId,
+    int id,
+    int userId,
+    int libraryId,
     String title,
     Map config,
     DateTime utcLastUpdate,
@@ -84,20 +85,36 @@ class AppChart extends Equatable {
     }
   }
 
+  Map getClonedConfig() {
+    //
+    if (config['lib'] == 'chartjs') {
+      return Map.from(
+        jsonDecode(jsonEncode(config)),
+      );
+    } else if (config['lib'] == 'apexcharts') {
+      // return List.castFrom<dynamic, Map>(
+      //   jsonDecode(jsonEncode(config['config']['series'])),
+      // );
+      return {};
+    } else {
+      return {};
+    }
+  }
+
   factory AppChart.fromJson(Map<String, dynamic> json) =>
       _$AppChartFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppChartToJson(this);
 
-  AppChart.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.reference.id,
-        userId = snapshot.data()['userId'] as String,
-        libraryId = snapshot.data()['libraryId'] as String,
-        title = snapshot.data()['title'] as String,
-        config = snapshot.data()['config'] as Map<String, dynamic>,
+  AppChart.fromSembastSnapshot(RecordSnapshot snapshot)
+      : id = snapshot.key as int,
+        userId = snapshot.value['userId'] as int,
+        libraryId = snapshot.value['libraryId'] as int,
+        title = snapshot.value['title'] as String,
+        config = snapshot.value['config'] as Map<String, dynamic>,
         utcLastUpdate =
-            (snapshot.data()['utcLastUpdate'] as Timestamp).toDate(),
-        activated = snapshot.data()['activated'] as bool,
+            (snapshot.value['utcLastUpdate'] as Timestamp).toDateTime(),
+        activated = snapshot.value['activated'] as bool,
         thumbnail = null;
 
   Map<String, dynamic> toDocument() {
@@ -106,7 +123,7 @@ class AppChart extends Equatable {
     fbDocument.remove('id');
 
     // Convert DateTime to Firebase Timestamp
-    fbDocument['utcLastUpdate'] = Timestamp.fromDate(this.utcLastUpdate);
+    fbDocument['utcLastUpdate'] = Timestamp.fromDateTime(this.utcLastUpdate);
 
     // Return
     return fbDocument;
@@ -156,7 +173,7 @@ class AppChart extends Equatable {
 
       content = '''<canvas id="$chartId"></canvas>''';
       content +=
-      '''<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>''';
+      '''<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>''';
     } else if (lib == 'apexcharts') {
       //
       jsString.write(

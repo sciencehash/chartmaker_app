@@ -29,7 +29,7 @@ class ChartsPageList extends StatelessWidget {
             onTap: () {
               Navigator.pushNamed(
                 context,
-                ChartEditor.baseRoute + '/' + chart.id,
+                ChartEditor.baseRoute + '/${chart.id}',
               );
             },
             trailing: IconButton(

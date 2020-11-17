@@ -1,26 +1,26 @@
-import 'package:chartmaker_app/widgets/charts_page/engines_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auth/auth.dart';
 
 import '../cubits/app_library/app_library_cubit.dart';
 
 import '../cubits/app_chart/app_chart_cubit.dart';
 
-import '../widgets/app/app_scaffold.dart';
+import '../widgets/app/primary_scaffold.dart';
 import '../widgets/app/page_title.dart';
 import '../widgets/app/bloc_loading_progress_indicator.dart';
 import '../widgets/app/empty_list_message.dart';
 import '../widgets/charts_page/charts_table.dart';
-import '../widgets/charts_page/charts_grid.dart';
+
+// import '../widgets/charts_page/charts_grid.dart';
 import '../widgets/charts_page/charts_list.dart';
+import 'engines_page.dart';
 
 class LibraryChartsPage extends StatefulWidget {
   static const String baseRoute = '/library';
 
   const LibraryChartsPage({Key key, this.libraryId}) : super(key: key);
 
-  final String libraryId;
+  final int libraryId;
 
   @override
   _LibraryChartsPageState createState() => _LibraryChartsPageState();
@@ -38,16 +38,18 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
   @override
   Widget build(BuildContext context) {
     //
-    final String uid =
-        (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // final String uid =
+    //     (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // TODO: HARDCODED user id
+    final int uid = 1;
 
     //
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Same that AppScaffold drawerMaxScreenWidth
+    // Same that PrimaryScaffold drawerMaxScreenWidth
     final minTableWidth = 900;
 
-    return AppScaffold(
+    return PrimaryScaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
         child: BlocBuilder<AppLibraryCubit, AppLibraryState>(
@@ -73,11 +75,9 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
                             message:
                                 "You don't have charts yet, you can add one now.",
                             buttonLabel: 'Add new Chart',
-                            onButtonPressed: () => showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) =>
-                                  EnginesBottomSheet(),
+                            onButtonPressed: () => Navigator.pushNamed(
+                              context,
+                              EnginesPage.route,
                             ),
                           ),
                       ],
@@ -105,10 +105,9 @@ class _LibraryChartsPageState extends State<LibraryChartsPage> {
         return FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (BuildContext context) => EnginesBottomSheet(),
+            Navigator.pushNamed(
+              context,
+              EnginesPage.route,
             );
           },
         );

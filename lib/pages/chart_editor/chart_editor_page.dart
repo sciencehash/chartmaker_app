@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auth/auth.dart';
 
 import '../../cubits/app_library/app_library_cubit.dart';
 import '../../cubits/app_chart/app_chart_cubit.dart';
@@ -14,7 +13,7 @@ import '../../widgets/chart_editor_page/apexcharts/basic_panel.dart';
 class ChartEditor extends StatefulWidget {
   static const String baseRoute = '/editor';
 
-  final String chartId;
+  final int chartId;
 
   ChartEditor({Key key, this.chartId}) : super(key: key);
 
@@ -31,8 +30,10 @@ class _ChartEditorState extends State<ChartEditor> {
   @override
   Widget build(BuildContext context) {
     //
-    String uid =
-        (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // String uid =
+    //     (context.bloc<AuthenticationCubit>().state as Authenticated).user.uid;
+    // TODO: HARDCODED user id
+    final int uid = 1;
 
     return BlocBuilder<EditorCubit, EditorState>(
         builder: (context, editorState) {

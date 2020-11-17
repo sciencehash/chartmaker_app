@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sembast/sembast.dart';
 
 part 'app_library.g.dart';
 
@@ -14,13 +14,13 @@ class AppLibrary extends Equatable {
     @required this.activated,
   });
 
-  final String id;
-  final String userId;
+  final int id;
+  final int userId;
   final String title;
   final bool activated;
 
-  AppLibrary.defaultLibrary(String _userId) :
-    id = '',
+  AppLibrary.defaultLibrary(int _userId) :
+    id = null,
     userId = _userId,
     title = 'My library',
     activated = true;
@@ -34,8 +34,8 @@ class AppLibrary extends Equatable {
   ];
 
   AppLibrary copyWith({
-    String id,
-    String userId,
+    int id,
+    int userId,
     String title,
     bool activated,
   }) {
@@ -50,11 +50,11 @@ class AppLibrary extends Equatable {
   factory AppLibrary.fromJson(Map<String, dynamic> json) => _$AppLibraryFromJson(json);
   Map<String, dynamic> toJson() => _$AppLibraryToJson(this);
 
-  AppLibrary.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.reference.id,
-        userId = snapshot.data()['userId'] as String,
-        title = snapshot.data()['title'] as String,
-        activated = snapshot.data()['activated'] as bool;
+  AppLibrary.fromSembastSnapshot(RecordSnapshot snapshot)
+      : id = snapshot.key as int,
+        userId = snapshot.value['userId'] as int,
+        title = snapshot.value['title'] as String,
+        activated = snapshot.value['activated'] as bool;
 
   Map<String, dynamic> toDocument() => this.toJson()..remove('id');
 

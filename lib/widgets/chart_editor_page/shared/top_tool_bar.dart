@@ -20,6 +20,7 @@ class TopToolBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           FlatButton.icon(
+            padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 25),
             icon: Icon(Icons.equalizer),
             label: Text('Datasets'),
             onPressed: () {
@@ -36,6 +37,7 @@ class TopToolBar extends StatelessWidget {
           ),
           Expanded(child: SizedBox()),
           FlatButton.icon(
+            padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 25),
             icon: Icon(Icons.code),
             label: Text('Embed'),
             onPressed: () async {
@@ -55,6 +57,7 @@ class TopToolBar extends StatelessWidget {
           //   label: Text('Share'),
           // ),
           FlatButton.icon(
+            padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 25),
             icon: Icon(Icons.file_download),
             label: Text('Export'),
             onPressed: () {

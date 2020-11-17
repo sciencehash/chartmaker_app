@@ -8,8 +8,8 @@ part of 'app_library.dart';
 
 AppLibrary _$AppLibraryFromJson(Map<String, dynamic> json) {
   return AppLibrary(
-    id: json['id'] as String,
-    userId: json['userId'] as String,
+    id: json['id'] as int,
+    userId: json['userId'] as int,
     title: json['title'] as String,
     activated: json['activated'] as bool,
   );

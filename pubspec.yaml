@@ -23,16 +23,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  auth:
-    path: auth
+  flutter_ui_widgets:
+    path: ../flutter_ui_widgets
   flutter_bloc: ^6.0.1
   equatable: ^1.2.3
   json_annotation: ^3.0.1
-  cloud_firestore: ^0.14.0+2
   url_launcher: ^5.5.0
   vertical_tabs: #^0.2.0
     path: vertical_tabs
   linked_scroll_controller: ^0.1.2
+  sembast: ^2.4.7+7
+  sembast_web: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

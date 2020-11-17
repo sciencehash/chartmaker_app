@@ -409,17 +409,22 @@ class _DatasetsEditorPageState extends State<DatasetsEditorPage> {
         AppChart appChart =
             (context.bloc<EditorCubit>().state as EditorLoaded).appChart;
 
+        //
+        Map editableAppChartConfig = appChart.getClonedConfig();
+
         if (lib == 'chartjs') {
           //
-          appChart.config['config']['data']['datasets'] = datasets;
+          editableAppChartConfig['config']['data']['datasets'] = datasets;
         } else if (lib == 'apexcharts') {
           //
-          appChart.config['config']['series'] = datasets;
+          editableAppChartConfig['config']['series'] = datasets;
         }
 
         //
         context.bloc<EditorCubit>().updateChart(
-              appChart: appChart,
+              appChart: appChart.copyWith(
+                config: editableAppChartConfig,
+              ),
             );
 
         //

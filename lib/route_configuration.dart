@@ -1,19 +1,16 @@
-import 'package:chartmaker_app/cubits/app_library/app_library_cubit.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auth/auth.dart';
 
-import 'pages/redirection_page.dart';
-import 'pages/auth/sign_in_page.dart';
-import 'pages/auth/sign_up_page.dart';
+// import 'pages/redirection_page.dart';
 
 import 'pages/root_page.dart';
 
 import 'cubits/editor/editor_cubit.dart';
 import 'cubits/app_chart/app_chart_cubit.dart';
-import 'repositories/app_chart_repository_firebase.dart';
+import 'repositories/app_chart_repository_sembast.dart';
 import 'pages/charts_page.dart';
+import 'pages/engines_page.dart';
+import 'pages/templates_page.dart';
 
 import 'pages/chart_editor/chart_editor_page.dart';
 
@@ -41,19 +38,6 @@ class RouteConfiguration {
   /// will be returned. This means that the paths higher up in the list will
   /// take priority.
   static List<Path> paths = [
-    //
-    // -------------------
-    // --- Auth routes ---
-    // -------------------
-    //
-    Path(
-      r'^' + SignInPage.route,
-      (context, match) => SignInPage(),
-    ),
-    Path(
-      r'^' + SignUpPage.route,
-      (context, match) => SignUpPage(),
-    ),
     //
     // -----------------------
     // --- Settings routes ---
@@ -99,12 +83,31 @@ class RouteConfiguration {
       r'^' + LibraryChartsPage.baseRoute + r'/([\w-]+)$',
       (context, match) => BlocProvider<AppChartCubit>(
         create: (BuildContext context) => AppChartCubit(
-          appChartRepository: AppChartRepositoryFirebase(),
+          appChartRepository: AppChartRepositorySembast(),
         ),
-        child: LibraryChartsPage(libraryId: match),
+        child: LibraryChartsPage(libraryId: int.tryParse(match)),
       ),
     ),
     //
+    // ---------------------------
+    // --- Engines page routes ---
+    // ---------------------------
+    //
+    Path(
+      r'^' + EnginesPage.route,
+      (context, match) => EnginesPage(),
+    ),
+    //
+    // ------------------------
+    // --- Templates page route ---
+    // ------------------------
+    //
+    Path(
+      r'^' + TemplatesPage.baseRoute + r'/([\w-]+)$',
+      (context, match) => TemplatesPage(
+        lib: match,
+      ),
+    ), //
     // ------------------------
     // --- Chart Editor route ---
     // ------------------------
@@ -115,16 +118,16 @@ class RouteConfiguration {
         providers: [
           BlocProvider<AppChartCubit>(
             create: (BuildContext context) => AppChartCubit(
-              appChartRepository: AppChartRepositoryFirebase(),
+              appChartRepository: AppChartRepositorySembast(),
             ),
           ),
           BlocProvider<EditorCubit>(
             create: (BuildContext context) => EditorCubit(
-              appChartRepository: AppChartRepositoryFirebase(),
+              appChartRepository: AppChartRepositorySembast(),
             ),
           ),
         ],
-        child: ChartEditor(chartId: match),
+        child: ChartEditor(chartId: int.tryParse(match)),
       ),
     ),
     Path(
@@ -133,7 +136,7 @@ class RouteConfiguration {
         providers: [
           BlocProvider<AppChartCubit>(
             create: (BuildContext context) => AppChartCubit(
-              appChartRepository: AppChartRepositoryFirebase(),
+              appChartRepository: AppChartRepositorySembast(),
             ),
           ),
           BlocProvider<EditorCubit>(
@@ -151,7 +154,7 @@ class RouteConfiguration {
         providers: [
           BlocProvider<AppChartCubit>(
             create: (BuildContext context) => AppChartCubit(
-              appChartRepository: AppChartRepositoryFirebase(),
+              appChartRepository: AppChartRepositorySembast(),
             ),
           ),
           BlocProvider<EditorCubit>(
@@ -192,86 +195,11 @@ class RouteConfiguration {
         final RegExpMatch firstMatch = regExpPattern.firstMatch(settings.name);
         final String match =
             (firstMatch.groupCount == 1) ? firstMatch.group(1) : null;
-        return MaterialPageRoute<void>(
-          builder: (context) {
-            return BlocBuilder<AuthenticationCubit, AuthenticationState>(
-              builder: (context, state) {
-                if (state is AuthenticationInitial) {
-                  // LoadAppAuth only for Flutter Hot reload
-                  if (kDebugMode) {
-                    context
-                        .bloc<AuthenticationCubit>()
-                        .loadAppAuth(flutterHotReload: true);
-                  }
-                  // Processing page
-                  return Scaffold(
-                    body: Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                  );
-                } else {
-                  //
-                  final List<String> unauthenticatedRoutes = [
-                    SignInPage.route,
-                    SignUpPage.route
-                  ];
 
-                  //
-                  if (settings.name == '/signout') {
-                    // Close AppLibrary subscription
-                    context.bloc<AppLibraryCubit>().close();
-                    // Sign out
-                    context.bloc<AuthenticationCubit>().signOut();
-                    // Redirect to Sign in page
-                    return RedirectionPage(
-                      routeName: SignInPage.route,
-                      clearHistory: true,
-                    );
-                  } else if (state is Unauthenticated &&
-                      !unauthenticatedRoutes.contains(settings.name)) {
-                    // Redirect to Sign in page
-                    return RedirectionPage(
-                      routeName: SignInPage.route,
-                      clearHistory: true,
-                    );
-                  } else if (state is Unauthenticated &&
-                      unauthenticatedRoutes.contains(settings.name)) {
-                    // Auth pages
-                    return path.builder(context, match);
-                  } else if (state is Authenticated &&
-                      unauthenticatedRoutes.contains(settings.name)) {
-                    // Redirect to root page
-                    return RedirectionPage(
-                      routeName: RootPage.route,
-                      clearHistory: true,
-                    );
-                  } else if (state is Authenticated &&
-                      state.user != null &&
-                      !unauthenticatedRoutes.contains(settings.name)) {
-                    // Authenticated pages
-                    return path.builder(context, match);
-                  } else {
-                    // Processing page
-                    return Scaffold(
-                      body: Center(
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ),
-                    );
-                  }
-                }
-              },
-            );
-          },
-          settings: settings,
-        );
+        //
+        return MaterialPageRoute<void>(builder: (context) {
+          return path.builder(context, match);
+        });
       }
     }
 

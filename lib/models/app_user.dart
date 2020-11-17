@@ -1,9 +1,7 @@
-import 'dart:typed_data';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sembast/sembast.dart';
 
 part 'app_user.g.dart';
 
@@ -17,13 +15,13 @@ class AppUser extends Equatable {
     @required this.activated,
   });
 
-  final String id;
+  final int id;
   final String pCloudToken;
   final String gDriveToken;
   final String dropboxToken;
   final bool activated;
 
-  AppUser.empty(String id)
+  AppUser.empty(int id)
       : id = id,
         pCloudToken = null,
         gDriveToken = null,
@@ -40,7 +38,7 @@ class AppUser extends Equatable {
       ];
 
   AppUser copyWith({
-    String id,
+    int id,
     String pCloudToken,
     String gDriveToken,
     String dropboxToken,
@@ -58,12 +56,12 @@ class AppUser extends Equatable {
   factory AppUser.fromJson(Map<String, dynamic> json) => _$AppUserFromJson(json);
   Map<String, dynamic> toJson() => _$AppUserToJson(this);
 
-  AppUser.fromSnapshot(DocumentSnapshot snapshot)
-      : id = snapshot.reference.id,
-        pCloudToken = snapshot.data()['pCloudToken'] as String,
-        gDriveToken = snapshot.data()['gDriveToken'] as String,
-        dropboxToken = snapshot.data()['dropboxToken'] as String,
-        activated = snapshot.data()['activated'] as bool;
+  AppUser.fromSembastSnapshot(RecordSnapshot snapshot)
+      : id = snapshot.key as int,
+        pCloudToken = snapshot.value['pCloudToken'] as String,
+        gDriveToken = snapshot.value['gDriveToken'] as String,
+        dropboxToken = snapshot.value['dropboxToken'] as String,
+        activated = snapshot.value['activated'] as bool;
 
   Map<String, dynamic> toDocument() => this.toJson()..remove('id');
 

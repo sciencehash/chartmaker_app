@@ -34,6 +34,7 @@ class EmptyListMessage extends StatelessWidget {
             ),
             if (onButtonPressed != null)
               FlatButton(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                 child: Text(buttonLabel ?? 'Go!'),
                 color: Theme.of(context).primaryColor,
                 onPressed: onButtonPressed,

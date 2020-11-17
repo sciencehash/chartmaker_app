@@ -5,6 +5,11 @@ import 'package:bloc/bloc.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
+import 'package:sembast/sembast.dart';
+import '../../stubs/sembast/sembast_stub.dart'
+if (dart.library.io) '../../stubs/sembast/sembast_io.dart'
+if (dart.library.html) '../../stubs/sembast/sembast_web.dart';
+
 import '../../repositories/chart_template_repository.dart';
 
 import '../../models/app_chart.dart';
@@ -23,12 +28,15 @@ class EditorCubit extends Cubit<EditorState> {
   })  : _appChartRepository = appChartRepository,
         super(EditorInitial());
 
+  //
+  Database db;
+
   Window _window;
   IFrameElement _iframeElement;
 
   void loadEditorFromChartTemplate({
-    @required String userId,
-    @required String libraryId,
+    @required int userId,
+    @required int libraryId,
   }) {
     Map template = ChartTemplateRepository.getTemplateById(templateId);
     if (template.isEmpty) {
@@ -53,11 +61,15 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   void loadEditorFromAppChart({
-    @required String userId,
-    @required String appChartId,
+    @required int userId,
+    @required int appChartId,
   }) async {
+    // We use the database factory to open the database
+    db ??= await openSembastDB();
+
     //
     AppChart appChart = await _appChartRepository.onceChart(
+      db: db,
       userId: userId,
       chartId: appChartId,
     );
