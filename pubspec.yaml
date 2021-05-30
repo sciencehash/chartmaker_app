@@ -1,5 +1,5 @@
 name: chartmaker_app
-description: Chart Maker
+description: Interface that allows you to generate charts using popular third-party free libraries such as chartjs or apexcharts.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -18,32 +18,29 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_ui_widgets:
-    path: ../flutter_ui_widgets
-  flutter_bloc: ^6.0.1
-  equatable: ^1.2.3
-  json_annotation: ^3.0.1
-  url_launcher: ^5.5.0
-  vertical_tabs: #^0.2.0
-    path: vertical_tabs
-  linked_scroll_controller: ^0.1.2
-  sembast: ^2.4.7+7
-  sembast_web: ^1.2.0
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  get: 4.1.4
+  hive: ^2.0.4
+  firebase_core: ^1.2.0
+  firebase_auth: ^1.2.0
+  cloud_firestore: ^2.2.0
+  firebase_analytics: ^8.1.0
+  google_sign_in: ^5.0.4
+  equatable: ^2.0.2
+  json_annotation: ^4.0.1
+  path_provider: ^2.0.1
+  url_launcher:
+  date_time_format: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  json_serializable:
+  json_serializable: ^4.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -59,8 +56,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/images/
-    - assets/images/templates/
+    - assets/images/auth/
+    - assets/images/social/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -73,13 +70,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Ubuntu-Light
-      fonts:
-        - asset: assets/fonts/Ubuntu-Light.ttf
-    - family: Ubuntu-Regular
-      fonts:
-        - asset: assets/fonts/Ubuntu-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

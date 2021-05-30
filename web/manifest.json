@@ -1,13 +1,21 @@
 {
-    "name": "Chart Maker",
-    "short_name": "Chart Maker",
+    "name": "ChartMaker",
+    "short_name": "ChartMaker",
     "start_url": ".",
-    "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Chart Maker",
+    "display": "minimal-ui",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "description": "Interface that allows you to generate charts using popular third-party free libraries such as chartjs or apexcharts.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "android_package_name": "org.chartmaker.app",
+    "related_applications": [
+        {
+            "id": "org.chartmaker.app",
+            "platform": "play",
+            "url": "https://play.google.com/store/apps/details?id=org.chartmaker.app"
+        }
+    ],
     "icons": [
         {
             "src": "icons/Icon-192.png",

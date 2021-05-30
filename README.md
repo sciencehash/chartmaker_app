@@ -1,23 +1,16 @@
-# What is Chart Maker?
+# chartmaker_app
 
-[Chart Maker](https://chartmaker.org) is a graphical interface that allows you to configure charts and insert them into a website without programming knowledge.
+Interface that allows you to generate charts using popular third-party free libraries such as chartjs or apexcharts.
 
-You can preview the chart and also save the changes to continue editing at another time.
+## Getting Started
 
-Internally it works with the popular Chart.js and ApexChart.js JavaScript libraries, although you don't need to know them to be able to use Chart Maker.
+This project is a starting point for a Flutter application.
 
-Chart Maker is available in its web version at:
+A few resources to get you started if this is your first Flutter project:
 
-[https://web.chartmaker.org](https://web.chartmaker.org/)
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-### Intuitive graphical interface
-
-Configure your charts in just a few clicks, selecting predefined options.
-
-### Multiple types of charts
-
-Charts of Lines, Bars, Bubbles, Pie, Donut, Radar, Area, Polar and more.
-
-### Export in various formats
-
-Get a code snippet to copy and paste into your website content.
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
