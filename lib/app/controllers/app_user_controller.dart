@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chartmaker_app/app/controllers/auth_controller.dart';
 import 'package:chartmaker_app/app/core/utils/helpers/theme.dart';
-import 'package:chartmaker_app/app/data/models/student.dart';
-import 'package:chartmaker_app/app/data/repositories/student_repository.dart';
+import 'package:chartmaker_app/app/data/models/app_user.dart';
+import 'package:chartmaker_app/app/data/repositories/app_user_repository.dart';
 
-class StudentController extends GetxController {
-  static StudentController to = Get.find();
+class AppUserController extends GetxController {
+  static AppUserController to = Get.find();
 
   StreamSubscription? _authUserStateSubscription;
 
-  final _studentRepository = StudentRepository();
-  StreamSubscription? _studentSubscription;
+  final _appUserRepository = AppUserRepository();
+  StreamSubscription? _appUserSubscription;
 
-  Rxn<Student> student = Rxn<Student>();
+  Rxn<AppUser> appUser = Rxn<AppUser>();
 
   final isLogged = false.obs;
 
@@ -41,42 +41,42 @@ class StudentController extends GetxController {
   @override
   void onClose() async {
     await _authUserStateSubscription?.cancel();
-    await _studentSubscription?.cancel();
+    await _appUserSubscription?.cancel();
     super.onClose();
   }
 
   // Handle changes between 'authenticated' and 'unauthenticated'
   Future<void> _handleAuthStateChanges(firebaseUser) async {
     // First of all, after an auth state change, close all subscriptions
-    await _studentSubscription?.cancel();
+    await _appUserSubscription?.cancel();
 
     //
     isLogged.value = firebaseUser != null;
 
     //
-    await _studentRepository.initProviders(
+    await _appUserRepository.initProviders(
       isLocal: firebaseUser == null,
     );
 
     //
-    _studentSubscription?.cancel();
+    _appUserSubscription?.cancel();
     //
-    _studentSubscription = _studentRepository
+    _appUserSubscription = _appUserRepository
         .watchById(isLogged.value ? firebaseUser!.uid : 'local')
-        .listen(_handleStudentChanges);
+        .listen(_handleAppUserChanges);
   }
 
-  void _handleStudentChanges(Student? newStudent) async {
+  void _handleAppUserChanges(AppUser? newAppUser) async {
     //
     final _authCtrl = AuthController.to;
 
     // Create reader user if not exists
-    if (newStudent == null) {
+    if (newAppUser == null) {
       // Note: This runs locally the first time the user enters the app,
       // and remotely when the user signs up.
 
       // Create the reader user object
-      Student _newUser = Student.minimum(
+      AppUser _newUser = AppUser.minimum(
         id: isLogged.value ? _authCtrl.firebaseUser.value!.uid : 'local',
       );
 
@@ -91,7 +91,7 @@ class StudentController extends GetxController {
         // Migrate local db collections to the remote db,
         // and get the local selectedLibraryId
         final _selectedLibraryId =
-            await _studentRepository.migrateLocalCollectionsToRemoteDb(
+            await _appUserRepository.migrateLocalCollectionsToRemoteDb(
           _newUser.id,
         );
 
@@ -105,36 +105,36 @@ class StudentController extends GetxController {
       }
 
       // Create the reader user in the db (local or remote)
-      await _studentRepository.add(_newUser);
+      await _appUserRepository.add(_newUser);
 
       //
       isMigratingLocalDataToRemote = false;
 
       // Set value to the above code
-      newStudent = _newUser;
+      newAppUser = _newUser;
     }
 
     // If user change default language (including initial load)
-    // Note: student.value = null on app init
-    if (student.value == null || newStudent.lang != student.value!.lang) {
+    // Note: appUser.value = null on app init
+    if (appUser.value == null || newAppUser.lang != appUser.value!.lang) {
       // At app init, this need a bit time
-      if (student.value == null) {
+      if (appUser.value == null) {
         await Future.delayed(Duration(milliseconds: 200));
       }
       //
-      if (newStudent.lang == 'en' || newStudent.lang == 'es') {
-        Get.updateLocale(Locale(newStudent.lang));
+      if (newAppUser.lang == 'en' || newAppUser.lang == 'es') {
+        Get.updateLocale(Locale(newAppUser.lang));
       } else {
         Get.updateLocale(Get.deviceLocale ?? Locale('en'));
       }
     }
 
     // If user select Dark mode (including initial load)
-    // Note: student.value == null on app init
-    if (student.value == null || newStudent.theme != student.value!.theme) {
-      if (newStudent.theme == 'sys') {
+    // Note: appUser.value == null on app init
+    if (appUser.value == null || newAppUser.theme != appUser.value!.theme) {
+      if (newAppUser.theme == 'sys') {
         Get.changeThemeMode(ThemeMode.system);
-      } else if (newStudent.theme == 'dark') {
+      } else if (newAppUser.theme == 'dark') {
         Get.changeThemeMode(ThemeMode.dark);
       } else {
         Get.changeThemeMode(ThemeMode.light);
@@ -159,35 +159,35 @@ class StudentController extends GetxController {
     }
 
     // Set new value and refresh view
-    student.value = newStudent;
-    student.refresh();
+    appUser.value = newAppUser;
+    appUser.refresh();
   }
 
   void toggleTheme() {
     late String newThemeName;
 
-    if (student.value!.theme == 'sys')
+    if (appUser.value!.theme == 'sys')
       newThemeName = 'light';
-    else if (student.value!.theme == 'light')
+    else if (appUser.value!.theme == 'light')
       newThemeName = 'dark';
-    else if (student.value!.theme == 'dark') newThemeName = 'sys';
+    else if (appUser.value!.theme == 'dark') newThemeName = 'sys';
 
-    _studentRepository.update(
-      student.value!.copyWith(
+    _appUserRepository.update(
+      appUser.value!.copyWith(
         theme: newThemeName,
       ),
     );
   }
 
   void changeLanguage(String key) {
-    _studentRepository.update(
-      student.value!.copyWith(
+    _appUserRepository.update(
+      appUser.value!.copyWith(
         lang: key,
       ),
     );
   }
 
-  Future<void> updateStudent(Student student) async {
-    await _studentRepository.update(student);
+  Future<void> updateAppUser(AppUser appUser) async {
+    await _appUserRepository.update(appUser);
   }
 }

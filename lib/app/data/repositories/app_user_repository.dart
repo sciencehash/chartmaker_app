@@ -1,33 +1,33 @@
-import 'package:chartmaker_app/app/data/models/student.dart';
-import 'package:chartmaker_app/app/data/providers/student_firestore_provider.dart';
-import 'package:chartmaker_app/app/data/providers/student_hive_provider.dart';
-import 'package:chartmaker_app/app/data/services/student_service.dart';
+import 'package:chartmaker_app/app/data/models/app_user.dart';
+import 'package:chartmaker_app/app/data/providers/app_user_firestore_provider.dart';
+import 'package:chartmaker_app/app/data/providers/app_user_hive_provider.dart';
+import 'package:chartmaker_app/app/data/services/app_user_service.dart';
 
-class StudentRepository {
-  late StudentService _studentService;
+class AppUserRepository {
+  late AppUserService _appUserService;
 
   Future<void> initProviders({required bool isLocal}) async {
-    _studentService =
-        isLocal ? StudentHiveProvider() : StudentFirestoreProvider();
-    await _studentService.initProvider();
+    _appUserService =
+        isLocal ? AppUserHiveProvider() : AppUserFirestoreProvider();
+    await _appUserService.initProvider();
   }
 
-  Stream<Student?> watchById(String id) {
-    return _studentService.watchById(id);
+  Stream<AppUser?> watchById(String id) {
+    return _appUserService.watchById(id);
   }
 
-  Future<void> add(Student user) async {
-    await _studentService.add(user);
+  Future<void> add(AppUser user) async {
+    await _appUserService.add(user);
   }
 
-  Future<void> update(Student user) async {
-    await _studentService.update(user);
+  Future<void> update(AppUser user) async {
+    await _appUserService.update(user);
   }
 
   // Migrate local db collections to the remote db
   Future<String> migrateLocalCollectionsToRemoteDb(String userId) async {
     // // Local services
-    // final StudentService _localStudentService = StudentHiveProvider();
+    // final AppUserService _localAppUserService = AppUserHiveProvider();
     // final LibraryService _localLibraryService = LibraryHiveProvider();
     // final UserDocumentDataService _localUserDocumentDataService =
     //     UserDocumentDataHiveProvider();
@@ -38,7 +38,7 @@ class StudentRepository {
     //     UserDocumentDataFirestoreProvider();
 
     // // Init local providers
-    // await _localStudentService.initProvider();
+    // await _localAppUserService.initProvider();
     // await _localLibraryService.initProvider();
     // await _localUserDocumentDataService.initProvider();
 
@@ -71,11 +71,11 @@ class StudentRepository {
     //   });
 
     // // Get local selectedLibraryId
-    // final _localStudent = await _localStudentService.byId('local');
-    // final String _selectedLibraryId = _localStudent!.selectedLibraryId;
+    // final _localAppUser = await _localAppUserService.byId('local');
+    // final String _selectedLibraryId = _localAppUser!.selectedLibraryId;
 
     // // Remove local user
-    // _localStudentService.removeById('local');
+    // _localAppUserService.removeById('local');
 
     // // Return local selectedLibraryId
     // return _selectedLibraryId;

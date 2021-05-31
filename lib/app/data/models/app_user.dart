@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:chartmaker_app/app/core/utils/helpers/model.dart';
 
-part 'student.g.dart';
+part 'app_user.g.dart';
 
 enum PaymentPeriod {
   mensual,
@@ -16,7 +16,7 @@ enum PaymentPeriod {
   explicitToJson: true,
   includeIfNull: false,
 )
-class Student extends Equatable {
+class AppUser extends Equatable {
   // Document ID or Key on local storage
   final String id;
 
@@ -78,9 +78,9 @@ class Student extends Equatable {
 
   @JsonKey(
     name: 'u',
-    fromJson: _studentConfigFromJson,
+    fromJson: _appUserConfigFromJson,
   )
-  final StudentConfig config;
+  final AppUserConfig config;
 
   static PaymentPeriod? _paymentPeriodFromJson(int? index) =>
       index != null ? PaymentPeriod.values[index] : null;
@@ -88,10 +88,10 @@ class Student extends Equatable {
   static int? _paymentPeriodToJson(PaymentPeriod? period) => period?.index;
 
   // To fix "Expected a value of type 'Map<String, dynamic>', but got one of type 'LinkedMap<dynamic, dynamic>'"
-  static StudentConfig _studentConfigFromJson(val) =>
-      StudentConfig.fromJson(Map<String, dynamic>.from(val));
+  static AppUserConfig _appUserConfigFromJson(val) =>
+      AppUserConfig.fromJson(Map<String, dynamic>.from(val));
 
-  Student({
+  AppUser({
     required this.id,
     required this.name,
     required this.photoUrl,
@@ -108,7 +108,7 @@ class Student extends Equatable {
     required this.config,
   });
 
-  Student.minimum({required String id})
+  AppUser.minimum({required String id})
       : id = id,
         name = null,
         photoUrl = null,
@@ -122,7 +122,7 @@ class Student extends Equatable {
         paymentPeriod = null,
         isSuspended = false,
         activated = true,
-        config = StudentConfig.minimum();
+        config = AppUserConfig.minimum();
 
   @override
   List<Object?> get props => [
@@ -142,7 +142,7 @@ class Student extends Equatable {
         config,
       ];
 
-  Student copyWith({
+  AppUser copyWith({
     String? id,
     String? name,
     String? photoUrl,
@@ -156,9 +156,9 @@ class Student extends Equatable {
     PaymentPeriod? paymentPeriod,
     bool? isSuspended,
     bool? activated,
-    StudentConfig? config,
+    AppUserConfig? config,
   }) {
-    return Student(
+    return AppUser(
       id: id ?? this.id,
       name: name ?? this.name,
       photoUrl: photoUrl ?? this.photoUrl,
@@ -176,13 +176,13 @@ class Student extends Equatable {
     );
   }
 
-  factory Student.fromJson(Map<String, dynamic> json) =>
-      _$StudentFromJson(json);
+  factory AppUser.fromJson(Map<String, dynamic> json) =>
+      _$AppUserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$StudentToJson(this);
+  Map<String, dynamic> toJson() => _$AppUserToJson(this);
 
   //
-  factory Student.fromFirestoreMap(String snapshotId, Map data) {
+  factory AppUser.fromFirestoreMap(String snapshotId, Map data) {
     //
     var json = Map<String, dynamic>.from(
       data,
@@ -198,7 +198,7 @@ class Student extends Equatable {
     json['i'] = (json['i'] as Timestamp?)?.toDate().toIso8601String();
 
     //
-    return _$StudentFromJson(json);
+    return _$AppUserFromJson(json);
   }
 
   Map<String, dynamic> toDocument() => this.toJson()..remove('id');
@@ -224,39 +224,39 @@ class Student extends Equatable {
   explicitToJson: true,
   includeIfNull: false,
 )
-class StudentConfig extends Equatable {
+class AppUserConfig extends Equatable {
   @JsonKey(
     name: 'a',
     defaultValue: false,
   )
   final bool avoidInstallMobileAppMsg;
 
-  StudentConfig({
+  AppUserConfig({
     required this.avoidInstallMobileAppMsg,
   });
 
-  StudentConfig.minimum() : avoidInstallMobileAppMsg = false;
+  AppUserConfig.minimum() : avoidInstallMobileAppMsg = false;
 
   @override
   List<Object> get props => [
         avoidInstallMobileAppMsg,
       ];
 
-  StudentConfig copyWith({
+  AppUserConfig copyWith({
     bool? avoidInstallMobileAppMsg,
   }) {
-    return StudentConfig(
+    return AppUserConfig(
       avoidInstallMobileAppMsg:
           avoidInstallMobileAppMsg ?? this.avoidInstallMobileAppMsg,
     );
   }
 
-  factory StudentConfig.fromJson(Map<String, dynamic> json) =>
-      _$StudentConfigFromJson(json);
+  factory AppUserConfig.fromJson(Map<String, dynamic> json) =>
+      _$AppUserConfigFromJson(json);
 
   Map<String, dynamic> toJson() {
     // Convert to JSON Map
-    Map<String, dynamic> json = _$StudentConfigToJson(this);
+    Map<String, dynamic> json = _$AppUserConfigToJson(this);
 
     // Remove 'avoidInstallMobileAppMsg' if have its default value
     if (avoidInstallMobileAppMsg == false) json.remove('a');

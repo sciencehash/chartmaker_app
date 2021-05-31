@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:chartmaker_app/app/data/models/student.dart';
-import 'package:chartmaker_app/app/data/services/student_service.dart';
+import 'package:chartmaker_app/app/data/models/app_user.dart';
+import 'package:chartmaker_app/app/data/services/app_user_service.dart';
 
-class StudentFirestoreProvider extends StudentService {
+class AppUserFirestoreProvider extends AppUserService {
   // Set collection name
   final _collectionName = 'users';
 
@@ -14,9 +14,9 @@ class StudentFirestoreProvider extends StudentService {
   Future<void> initProvider() async {}
 
   /// getFirestoreUser
-  Future<Student?> byId(String id) async {
+  Future<AppUser?> byId(String id) async {
     return await _db.collection(_collectionName).doc(id).get().then(
-          (documentSnapshot) => Student.fromFirestoreMap(
+          (documentSnapshot) => AppUser.fromFirestoreMap(
             documentSnapshot.id,
             documentSnapshot.data()!,
           ),
@@ -24,10 +24,10 @@ class StudentFirestoreProvider extends StudentService {
   }
 
   ///
-  Stream<Student?> watchById(String id) {
+  Stream<AppUser?> watchById(String id) {
     return _db.collection(_collectionName).doc(id).snapshots().map(
           (snapshot) => snapshot.data() != null
-              ? Student.fromFirestoreMap(
+              ? AppUser.fromFirestoreMap(
                   snapshot.id,
                   snapshot.data()!,
                 )
@@ -36,16 +36,16 @@ class StudentFirestoreProvider extends StudentService {
   }
 
   ///
-  Future<void> add(Student student) async {
-    await _db.collection(_collectionName).doc(student.id).set(
-          student.toFirestoreDocument(),
+  Future<void> add(AppUser appUser) async {
+    await _db.collection(_collectionName).doc(appUser.id).set(
+          appUser.toFirestoreDocument(),
         );
   }
 
   ///
-  Future<void> update(Student student) async {
-    await _db.collection(_collectionName).doc(student.id).set(
-          student.toFirestoreDocument(),
+  Future<void> update(AppUser appUser) async {
+    await _db.collection(_collectionName).doc(appUser.id).set(
+          appUser.toFirestoreDocument(),
         );
   }
 

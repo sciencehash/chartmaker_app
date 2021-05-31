@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'student.dart';
+part of 'app_user.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Student _$StudentFromJson(Map<String, dynamic> json) {
-  return Student(
+AppUser _$AppUserFromJson(Map<String, dynamic> json) {
+  return AppUser(
     id: json['id'] as String,
     name: json['a'] as String?,
     photoUrl: json['b'] as String?,
@@ -19,14 +19,14 @@ Student _$StudentFromJson(Map<String, dynamic> json) {
     signUpAt: DateTime.parse(json['h'] as String),
     lastPaymentAt:
         json['i'] == null ? null : DateTime.parse(json['i'] as String),
-    paymentPeriod: Student._paymentPeriodFromJson(json['j'] as int?),
+    paymentPeriod: AppUser._paymentPeriodFromJson(json['j'] as int?),
     isSuspended: json['k'] as bool? ?? false,
     activated: json['t'] as bool,
-    config: Student._studentConfigFromJson(json['u']),
+    config: AppUser._appUserConfigFromJson(json['u']),
   );
 }
 
-Map<String, dynamic> _$StudentToJson(Student instance) {
+Map<String, dynamic> _$AppUserToJson(AppUser instance) {
   final val = <String, dynamic>{
     'id': instance.id,
   };
@@ -46,20 +46,20 @@ Map<String, dynamic> _$StudentToJson(Student instance) {
   val['g'] = instance.selectedLibraryId;
   val['h'] = instance.signUpAt.toIso8601String();
   writeNotNull('i', instance.lastPaymentAt?.toIso8601String());
-  writeNotNull('j', Student._paymentPeriodToJson(instance.paymentPeriod));
+  writeNotNull('j', AppUser._paymentPeriodToJson(instance.paymentPeriod));
   val['k'] = instance.isSuspended;
   val['t'] = instance.activated;
   val['u'] = instance.config.toJson();
   return val;
 }
 
-StudentConfig _$StudentConfigFromJson(Map<String, dynamic> json) {
-  return StudentConfig(
+AppUserConfig _$AppUserConfigFromJson(Map<String, dynamic> json) {
+  return AppUserConfig(
     avoidInstallMobileAppMsg: json['a'] as bool? ?? false,
   );
 }
 
-Map<String, dynamic> _$StudentConfigToJson(StudentConfig instance) =>
+Map<String, dynamic> _$AppUserConfigToJson(AppUserConfig instance) =>
     <String, dynamic>{
       'a': instance.avoidInstallMobileAppMsg,
     };

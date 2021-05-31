@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
 
 class EditorController extends GetxController {
-  //TODO: Implement EditorController
-
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -15,6 +12,7 @@ class EditorController extends GetxController {
   }
 
   @override
-  void onClose() {}
-  void increment() => count.value++;
+  void onClose() {
+    super.onClose();
+  }
 }

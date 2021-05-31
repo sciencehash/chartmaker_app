@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:get/get.dart';
 import 'package:chartmaker_app/app/core/utils/helpers/gravatar.dart';
 
-import 'package:chartmaker_app/app/data/models/student.dart';
+import 'package:chartmaker_app/app/data/models/app_user.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
@@ -135,7 +135,7 @@ class AuthController extends GetxController {
 
   //handles updating the user when updating profile
   Future<void> updateUser(
-      Student user, String oldEmail, String password) async {
+      AppUser user, String oldEmail, String password) async {
     // try {
     //   // showLoadingIndicator();
     //   await _auth
@@ -144,7 +144,7 @@ class AuthController extends GetxController {
     //     _firebaseUser.user!.updateEmail(user.email!).then(
     //       // (value) => _updateUserFirestore(user, _firebaseUser.user!),
     //       (value) {
-    //         _studentProvider.update(user);
+    //         _appUserProvider.update(user);
     //         update();
     //       },
     //     );
